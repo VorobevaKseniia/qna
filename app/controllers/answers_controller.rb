@@ -1,7 +1,6 @@
 class AnswersController < ApplicationController
   before_action :find_question, only: %i[ new create ]
   before_action :find_answer, only: %i[ edit update destroy ]
-
   def new
     @answer = @question.answers.new
   end

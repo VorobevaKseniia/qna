@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :find_question, only: %i[ new create ]
-  before_action :set_answer, only: %i[ edit update destroy ]
+  before_action :find_answer, only: %i[ edit update destroy ]
 
   def new
     @answer = @question.answers.new
@@ -41,7 +41,7 @@ class AnswersController < ApplicationController
     @question = Question.find(params[:question_id])
   end
 
-  def set_answer
+  def find_answer
     @answer = Answer.find(params[:id])
   end
 end

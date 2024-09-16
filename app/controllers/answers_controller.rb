@@ -1,19 +1,24 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!
   before_action :find_question, only: %i[ new create ]
-  before_action :find_answer, only: %i[ edit update destroy ]
+  before_action :find_answer, only: %i[ show edit update destroy ]
   def new
-    @answer = @question.answers.new
+    @answer = current_user.answers.new(question: @question)
+  end
+
+  def show
   end
 
   def edit
   end
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = current_user.answers.new(answer_params)
+    @answer.question = @question
     if @answer.save
-      redirect_to question_path(@answer.question)
+      redirect_to question_path(@answer.question), notice: 'Your answer successfully created.'
     else
-      render :new
+      render 'questions/show', question_id: @question
     end
   end
 
@@ -26,8 +31,8 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy
-    redirect_to question_path(@answer.question)
+    @answer.destroy if current_user.author?(@answer)
+    redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
   end
 
   private

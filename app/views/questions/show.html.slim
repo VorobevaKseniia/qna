@@ -1,5 +1,11 @@
-h1= question.title
-p= question.body
+= render @question
+= render @question.answers
 
-- question.answers.each do |answer|
-  h2= answer.body
+h1= 'New answer'
+= render 'shared/errors', resource: @answer
+
+= form_with model: [@question, @answer], local: true do |f|
+  = f.label :body
+  = f.text_area :body
+
+  = f.submit 'Answer'

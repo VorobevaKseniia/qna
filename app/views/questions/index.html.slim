@@ -1,3 +1,7 @@
-p= link_to 'Ask question', new_question_path
+-if user_signed_in?
+  p= link_to 'Ask question', new_user_question_path(current_user)
+-else
+  p= link_to 'Ask question', new_user_session_path
+
 - @questions.each do |question|
   h2= question.title

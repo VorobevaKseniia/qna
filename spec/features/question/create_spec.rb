@@ -11,8 +11,7 @@ feature 'User can create a question', %q{
   describe 'Authenticated user' do
     background do
       sign_in(user)
-
-      visit questions_path
+      visit user_questions_path(user)
       click_on 'Ask question'
     end
 
@@ -34,9 +33,9 @@ feature 'User can create a question', %q{
   end
 
   scenario 'Unauthenticated user tries to ask a question' do
-    visit questions_path
+    visit user_questions_path(user)
     click_on 'Ask question'
 
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).to have_content 'You need to sign in to write a question'
   end
 end

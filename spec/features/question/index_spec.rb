@@ -5,11 +5,11 @@ feature 'User can view a list of questions', %q{
   As an user
   I'd like to be able to view questions
 }do
-
-  given!(:questions) { create_list(:question, 3) }
+  given(:user) { create(:user) }
+  given!(:questions) { create_list(:question, 3, user: user) }
 
   scenario 'User views questions' do
-    visit questions_path
+    visit user_questions_path(user)
 
     questions.each do |question|
       expect(page).to have_content question.title

@@ -1,0 +1,7 @@
+h2= answer.body
+
+-if user_signed_in? && current_user.author?(answer)
+    =link_to 'Delete answer', answer_path(answer),
+        method: :delete,
+        data: { confirm: 'Are you sure you want to delete the answer?' }
+

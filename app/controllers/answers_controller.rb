@@ -1,16 +1,16 @@
+# frozen_string_literal: true
+
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_question, only: %i[ new create ]
-  before_action :find_answer, only: %i[ show edit update destroy ]
+  before_action :find_question, only: %i[new create]
+  before_action :find_answer, only: %i[show edit update destroy]
   def new
     @answer = current_user.answers.new(question: @question)
   end
 
-  def show
-  end
+  def show; end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @answer = current_user.answers.new(answer_params)

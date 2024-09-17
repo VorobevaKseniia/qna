@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can delete a question', %q{
+feature 'User can delete a question', "
   In order to delete a question
   As a user
   I'd like to be able to destroy a question
-} do
-
+" do
   given(:user) { create(:user) }
   given(:author) { create(:user) }
   given(:question) { create(:question, user: author) }
@@ -32,5 +33,4 @@ feature 'User can delete a question', %q{
 
     expect(page).to_not have_link 'Delete question'
   end
-
 end

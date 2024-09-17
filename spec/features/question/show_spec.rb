@@ -1,13 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can view a question and its answers', %q{
+feature 'User can view a question and its answers', "
   In order to find an answer to the question
   As a user
   I'd like to be able to view a question and its answers
-} do
-
+" do
   given(:user) { create(:user) }
-  given(:question) { create(:question, user: user) }
+  given(:question) { create(:question, user:) }
 
   scenario 'User views question and its answers' do
     visit question_path(question)

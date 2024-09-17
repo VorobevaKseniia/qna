@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can sign up', %q{
+feature 'User can sign up', "
   In order to log in
   As an unauthenticated user
   I'd like to be able to sign up
-} do
-
+" do
   scenario 'Unregistered user tries to register' do
     visit new_user_registration_path
 
@@ -18,7 +19,6 @@ feature 'User can sign up', %q{
   end
 
   context 'Registered user' do
-
     given(:user) { create(:user) }
 
     scenario 'tries to register' do

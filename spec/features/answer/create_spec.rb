@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can create an answer', %q{
+feature 'User can create an answer', "
   In order to help with question
   As an authenticated user
   I'd like to be able to answer the question
-}do
-
+" do
   given(:user) { create(:user) }
   given(:question) { create(:question, user_id: user.id) }
 

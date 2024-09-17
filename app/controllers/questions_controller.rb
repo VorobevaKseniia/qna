@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: %i[ index show ]
-  before_action :find_user, only: [:new, :create]
+  before_action :authenticate_user!, except: %i[index show]
+  before_action :find_user, only: %i[new create]
   before_action :find_question, only: %i[show edit update destroy]
   def index
     @questions = Question.all
-    flash[:notion] = 'You need to sign in to write a question' if !user_signed_in?
+    flash[:notion] = 'You need to sign in to write a question' unless user_signed_in?
   end
 
   def show
@@ -13,11 +15,9 @@ class QuestionsController < ApplicationController
 
   def new
     @question = @user.questions.new
-    @user = current_user
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @question = @user.questions.new(question_params)

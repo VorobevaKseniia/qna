@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -8,6 +10,6 @@ class User < ApplicationRecord
   has_many :answers, dependent: :destroy
 
   def author?(object)
-    object.user_id == self.id
+    object.user_id == id
   end
 end

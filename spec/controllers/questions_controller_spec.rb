@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user: user) }
+  let(:question) { create(:question, user:) }
 
   describe 'GET #index' do
-    let(:questions) { create_list(:question, 3, user: user) }
+    let(:questions) { create_list(:question, 3, user:) }
 
     before { get :index }
 
@@ -19,7 +21,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:answers) { create_list(:answer, 3, question: question, user: user)}
+    let(:answers) { create_list(:answer, 3, question:, user:) }
     before { get :show, params: { id: question } }
 
     it 'assigns the requested question to @question' do
@@ -49,20 +51,24 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with valid attributes' do
       it 'saves a new question in the database' do
-        expect { post :create, params: { question: attributes_for(:question),
-                                         user_id: user.id} }.to change(Question, :count).by(1)
+        expect do
+          post :create, params: { question: attributes_for(:question),
+                                  user_id: user.id }
+        end.to change(Question, :count).by(1)
       end
 
       it 'redirects to show view' do
-        post :create, params:{ question: attributes_for(:question), user_id: user.id}
+        post :create, params: { question: attributes_for(:question), user_id: user.id }
         expect(response).to redirect_to assigns(:question)
       end
     end
 
     context 'with invalid attributes' do
       it 'does not save the question' do
-        expect { post :create, params: { question: attributes_for(:question, :invalid),
-                                         user_id: user.id } }.to_not change(Question, :count)
+        expect do
+          post :create, params: { question: attributes_for(:question, :invalid),
+                                  user_id: user.id }
+        end.to_not change(Question, :count)
       end
       it 're-renders new view' do
         post :create, params: { question: attributes_for(:question, :invalid), user_id: user.id }
@@ -86,18 +92,17 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     before { login(user) }
-    let!(:answer) { create(:answer, question: question, user: user ) }
+    let!(:answer) { create(:answer, question:, user:) }
     let!(:non_author) { create(:user) }
-
 
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
-        patch :update, params: { id: question, question: attributes_for(:question), user: user }
+        patch :update, params: { id: question, question: attributes_for(:question), user: }
         expect(assigns(:question)).to eq question
       end
 
       it 'changes questions attributes' do
-        patch :update, params: { id: question, question: { title: 'new title', body: 'new body', user: user } }
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body', user: } }
         question.reload
 
         expect(question.title).to eq 'new title'
@@ -105,13 +110,13 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'redirects to updated question' do
-        patch :update, params: { id: question, question: attributes_for(:question, user: user) }
+        patch :update, params: { id: question, question: attributes_for(:question, user:) }
         expect(response).to redirect_to assigns(:question)
       end
     end
 
     context 'with invalid attributes' do
-      before { patch :update, params: { id: question, question: attributes_for(:question, :invalid)}}
+      before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
       it 'does not change question' do
         question.reload
 
@@ -128,7 +133,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'DELETE #destroy' do
     before { login(user) }
 
-    let!(:question) { create(:question, user: user) }
+    let!(:question) { create(:question, user:) }
 
     it 'deletes the question' do
       expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)

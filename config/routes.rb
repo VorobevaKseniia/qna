@@ -1,6 +1,13 @@
-Rails.application.routes.draw do
+# frozen_string_literal: true
 
-  resources :questions do
-    resources :answers, shallow: true
+Rails.application.routes.draw do
+  root to: 'questions#index'
+
+  devise_for :users
+
+  resources :users do
+    resources :questions, shallow: true do
+      resources :answers, shallow: true
+    end
   end
 end

@@ -1,0 +1,6 @@
+h1= question.title
+p= question.body
+
+-if user_signed_in? && current_user.author?(question)
+  = link_to 'Delete question', question_path(question), method: :delete,
+          data: {confirm: 'Are you sure you want to delete the question?' }

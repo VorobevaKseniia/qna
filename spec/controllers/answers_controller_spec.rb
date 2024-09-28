@@ -69,42 +69,31 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'PATCH #update' do
     before { login(user) }
+    let!(:answer) { create(:answer, question: question, user: user) }
 
     context 'with valid attributes' do
-      it 'assigns the requested answer to @answer' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer),
-                                 question:, user: }
-        expect(assigns(:answer)).to eq answer
-      end
+      before { patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js }
 
       it "changes answer's attributes" do
-        patch :update, params: { id: answer, answer: { body: 'new body' },
-                                 question:, user: }
         answer.reload
-
         expect(answer.body).to eq 'new body'
       end
 
-      it 'redirects to question_path with updated data' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer),
-                                 question:, user: }
-        expect(response).to redirect_to answer.question
+      it 'renders update view' do
+        expect(response).to render_template :update
       end
     end
 
     context 'with invalid attributes' do
-      before do
-        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid),
-                                 question:, user: }
-      end
       it 'does not change answer' do
-        answer.reload
-
-        expect(answer.body).to eq 'MyText'
+        expect {patch :update,
+                       params: { id: answer, answer: attributes_for(:answer, :invalid) },
+                       format: :js}.to_not change(answer, :body)
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        expect(response).to render_template :update
       end
     end
   end

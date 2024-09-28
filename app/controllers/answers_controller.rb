@@ -8,22 +8,19 @@ class AnswersController < ApplicationController
     @answer = current_user.answers.new(question: @question)
   end
 
-  def show; end
-
-  def edit; end
-
   def create
     @answer = current_user.answers.new(answer_params)
     @answer.question = @question
     @answer.save
   end
 
+  def show; end
+
+  def edit; end
+
   def update
-    if @answer.update(answer_params)
-      redirect_to question_path(@answer.question)
-    else
-      render :edit
-    end
+    @answer.update(answer_params)
+    @question = @answer.question
   end
 
   def destroy

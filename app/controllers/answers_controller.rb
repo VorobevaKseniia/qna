@@ -19,13 +19,12 @@ class AnswersController < ApplicationController
   def edit; end
 
   def update
-    @answer.update(answer_params)
+    @answer.update(answer_params) if current_user.author?(@answer)
     @question = @answer.question
   end
 
   def destroy
     @answer.destroy if current_user.author?(@answer)
-    redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
   end
 
   private

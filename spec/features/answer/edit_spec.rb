@@ -14,7 +14,7 @@ feature 'User can edit their answer', %q{
     background do
       sign_in(user)
       visit question_path(question)
-      within '.answer' do
+      within '.answers' do
         click_on 'Edit'
       end
     end
@@ -31,7 +31,7 @@ feature 'User can edit their answer', %q{
     end
 
     scenario 'edits their answer with errors' do
-      within '.answer' do
+      within '.answers' do
         fill_in 'Body', with: ''
         click_on 'Save'
       end
@@ -42,14 +42,14 @@ feature 'User can edit their answer', %q{
   scenario "Authenticated user tries to edit other user's answer", js: true do
     sign_in(non_author)
     visit question_path(question)
-    within '.answer' do
+    within '.answers' do
       expect(page).to_not have_link 'Edit'
     end
   end
 
   scenario 'Unauthenticated user can not edit answer' do
     visit question_path(question)
-    within '.answer' do
+    within '.answers' do
       expect(page).to_not have_link 'Edit'
     end
   end

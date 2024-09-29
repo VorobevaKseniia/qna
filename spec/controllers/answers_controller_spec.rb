@@ -107,20 +107,20 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'when user is the author of the answer' do
       it 'deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
     end
 
     context 'when user is not the author of the answer' do
-      it 'does not destroy the answer if user_id is wrong' do
+      it 'does not destroy the answer if user is not the author' do
         login(non_author)
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(0)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(0)
       end
     end
 
-    it 'redirects to question_path' do
-      delete :destroy, params: { id: answer }
-      expect(response).to redirect_to answer.question
+    it 'render destroy' do
+      delete :destroy, params: { id: answer }, format: :js
+      expect(response).to render_template :destroy
     end
   end
 end

@@ -98,6 +98,36 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #mark_as_best' do
+    before { login(user) }
+    let!(:answers) { create_list(:answer, 3, question: question, user: user ) }
+
+    context 'when user is the author of the question' do
+      it 'marks the answer as best' do
+        patch :mark_as_best, params: { id: answer.id }, format: :js
+        answer.reload
+        expect(answer.best).to be true
+        expect(question.answers.where(best: true).count).to eq 1
+      end
+
+      it 'redirects to the question page' do
+        patch :mark_as_best, params: { id: answer.id }, format: :js
+        expect(response).to render_template :mark_as_best
+      end
+    end
+
+    context 'when user is not author of the question' do
+      let!(:non_author) { create(:user) }
+      before { login(non_author) }
+
+      it 'does not mark the answer as best' do
+        patch :mark_as_best, params: { id: answer.id }, format: :js
+        answer.reload
+        expect(answer.best).to be false
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     before { login(user) }
 

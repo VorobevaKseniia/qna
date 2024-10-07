@@ -5,12 +5,12 @@ require 'rails_helper'
 feature 'User can create an answer', "
   In order to help with question
   As an authenticated user
-  I'd like to be able to answer the question
+  I want to be able to create answers
 " do
   given(:user) { create(:user) }
   given(:question) { create(:question, user_id: user.id) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(user)
       visit question_path(question)
@@ -20,8 +20,10 @@ feature 'User can create an answer', "
       fill_in 'Body', with: 'answer answer answer'
       click_on 'Answer'
 
-      expect(page).to have_content 'Your answer successfully created.'
-      expect(page).to have_content 'answer answer answer'
+      expect(current_path).to eq question_path(question)
+      within '.answers' do
+        expect(page).to have_content 'answer answer answer'
+      end
     end
 
     scenario 'answers the question with errors' do

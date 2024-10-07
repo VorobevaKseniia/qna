@@ -1,11 +1,14 @@
-= render @question
-= render @question.answers
+.question
+  = render @question
+
+.answers
+  .disposal-information
+  = render @answers
 
 h1= 'New answer'
-= render 'shared/errors', resource: @answer
-
-= form_with model: [@question, @answer], local: true do |f|
+.answer-errors
+  = render 'shared/errors', resource: @answer
+= form_with model: [@question, @answer], class: 'new-answer', local: false do |f|
   = f.label :body
   = f.text_area :body
-
   = f.submit 'Answer'

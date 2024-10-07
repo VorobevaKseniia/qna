@@ -31,6 +31,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'bootstrap', '~> 5.3'
 gem 'devise'
+gem 'jquery-rails'
 gem 'slim-rails'
 
 group :development, :test do

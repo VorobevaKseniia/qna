@@ -1,9 +1,16 @@
 h1= question.title
 p= question.body
+.remove-file
 
 - if @question.files.attached?
   - @question.files.each do |file|
-    p= link_to file.filename.to_s, url_for(file)
+    p id="file_#{file.id}"
+      = link_to file.filename.to_s, url_for(file)
+      - if user_signed_in? && current_user.author?(@question)
+        = link_to ' X', remove_file_question_path(@question, file_id: file.id),
+                method: :delete,
+                data: { confirm: 'Are you sure?' },
+                remote: true
 
 .question-errors
   = render 'shared/errors', resource: @question

@@ -153,4 +153,23 @@ RSpec.describe AnswersController, type: :controller do
       expect(response).to render_template :destroy
     end
   end
+
+  describe 'DELETE #remove_file' do
+    before { login(user) }
+
+    let!(:answer) { create(:answer, question: question, user: user) }
+    let!(:file) { fixture_file_upload("#{Rails.root}/spec/rails_helper.rb") }
+
+    before { answer.files.attach(file) }
+
+    it 'deletes the file' do
+      expect { delete :remove_file, params: { id: answer, file_id: answer.files.first.id }, format: :js }
+        .to change(answer.files, :count).by(-1)
+    end
+
+    it 'renders remove_file view' do
+      delete :remove_file, params: { id: answer, file_id: answer.files.first.id }, format: :js
+      expect(response).to render_template :remove_file
+    end
+  end
 end

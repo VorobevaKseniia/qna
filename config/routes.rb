@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :answers, shallow: true do
         member do
           patch :mark_as_best
+          delete :remove_file
         end
       end
     end

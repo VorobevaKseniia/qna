@@ -3,7 +3,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: %i[new create]
-  before_action :find_answer, only: %i[mark_as_best show edit update destroy]
+  before_action :find_answer, only: %i[mark_as_best show edit update destroy remove_file]
   def new
     @answer = current_user.answers.new(question: @question)
   end
@@ -32,6 +32,11 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer.destroy if current_user.author?(@answer)
+  end
+
+  def remove_file
+    file = @answer.files.find(params[:file_id])
+    file.purge if current_user.author?(@answer)
   end
 
   private

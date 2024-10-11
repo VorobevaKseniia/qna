@@ -1,6 +1,5 @@
 div id="answer-#{answer.id}" class="answer"
   h2= answer.body
-  .remove-file-answer
   p= "Best answer" if answer.best
 
   - if answer.files.attached?
@@ -26,5 +25,5 @@ div id="answer-#{answer.id}" class="answer"
     = f.label :body
     = f.text_area :body
     = f.label :files
-    = f.file_field :files, multiple: true
+    = f.file_field :files, multiple: true, direct_upload: true
     = f.submit 'Save'

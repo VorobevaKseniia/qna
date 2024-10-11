@@ -3,6 +3,7 @@
 
 .answers
   .disposal-information
+  .remove-file-answer
   = render @answers
 
 h1= 'New answer'
@@ -13,6 +14,6 @@ h1= 'New answer'
   = f.text_area :body
 
   = f.label :files
-  = f.file_field :files, multiple: true
+  = f.file_field :files, multiple: true, direct_upload: true
 
   = f.submit 'Answer'

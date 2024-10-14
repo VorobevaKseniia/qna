@@ -7,7 +7,7 @@ div id="answer-#{answer.id}" class="answer"
       p id="file_#{file.id}"
         = link_to file.filename.to_s, url_for(file)
         - if user_signed_in? && current_user.author?(answer)
-          = link_to ' X', remove_file_answer_path(answer, file_id: file.id),
+          = link_to ' X', attachment_path(file),
                   method: :delete,
                   data: { confirm: 'Are you sure?' },
                   remote: true

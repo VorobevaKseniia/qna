@@ -34,11 +34,6 @@ class AnswersController < ApplicationController
     @answer.destroy if current_user.author?(@answer)
   end
 
-  def remove_file
-    file = @answer.files.find(params[:file_id])
-    file.purge if current_user.author?(@answer)
-  end
-
   private
 
   def answer_params

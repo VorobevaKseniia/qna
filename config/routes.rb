@@ -7,15 +7,13 @@ Rails.application.routes.draw do
 
   resources :users do
     resources :questions, shallow: true do
-      member do
-        delete :remove_file
-      end
       resources :answers, shallow: true do
         member do
           patch :mark_as_best
-          delete :remove_file
         end
       end
+
+    resources :attachments, only: :destroy
     end
   end
 end

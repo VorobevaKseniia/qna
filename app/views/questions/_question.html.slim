@@ -1,13 +1,12 @@
 h1= question.title
 p= question.body
-.remove-file-question
 
 - if @question.files.attached?
   - @question.files.each do |file|
     p id="file_#{file.id}"
       = link_to file.filename.to_s, url_for(file)
       - if user_signed_in? && current_user.author?(@question)
-        = link_to ' X', remove_file_question_path(@question, file_id: file.id),
+        = link_to ' X', attachment_path(file),
                 method: :delete,
                 data: { confirm: 'Are you sure?' },
                 remote: true

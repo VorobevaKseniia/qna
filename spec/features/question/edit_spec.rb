@@ -47,8 +47,8 @@ feature 'User can edit their question', %q{
       within '.question' do
         fill_in 'Title', with: 'edited title'
         fill_in 'Body', with: 'edited body'
-
         attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+
         click_on 'Save'
       end
       expect(page).to have_link 'rails_helper.rb'

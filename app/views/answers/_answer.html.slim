@@ -1,16 +1,29 @@
 div id="answer-#{answer.id}" class="answer"
   h2= answer.body
-  = "Best answer" if answer.best
+  p= "Best answer" if answer.best
+
+  - if answer.files.attached?
+    - answer.files.each do |file|
+      p id="file_#{file.id}"
+        = link_to file.filename.to_s, url_for(file)
+        - if user_signed_in? && current_user.author?(answer)
+          = link_to ' X', attachment_path(file),
+                  method: :delete,
+                  data: { confirm: 'Are you sure?' },
+                  remote: true
 
   -if user_signed_in? && current_user.author?(answer)
-    p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id}
-    p= link_to 'Delete answer', answer_path(answer), method: :delete,
+    = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id}
+    |  |
+    = link_to 'Delete answer', answer_path(answer), method: :delete,
             data: { confirm: 'Are you sure?' }, remote: true
   - if user_signed_in? && current_user.author?(answer.question)
-    = link_to 'Mark as best', mark_as_best_answer_path(answer), method: :patch, remote: true
+    p= link_to 'Mark as best', mark_as_best_answer_path(answer), method: :patch, remote: true
 
 
   = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
     = f.label :body
     = f.text_area :body
+    = f.label :files
+    = f.file_field :files, multiple: true, direct_upload: true
     = f.submit 'Save'

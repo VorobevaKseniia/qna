@@ -3,7 +3,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: %i[new create]
-  before_action :find_answer, only: %i[mark_as_best show edit update destroy]
+  before_action :find_answer, only: %i[mark_as_best show edit update destroy remove_file]
   def new
     @answer = current_user.answers.new(question: @question)
   end
@@ -37,7 +37,7 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 
   def find_question
@@ -45,6 +45,6 @@ class AnswersController < ApplicationController
   end
 
   def find_answer
-    @answer = Answer.find(params[:id])
+    @answer = Answer.with_attached_files.find(params[:id])
   end
 end

@@ -8,6 +8,8 @@ RSpec.describe Answer, type: :model do
 
   it { should validate_presence_of :body }
 
+  it { should have_many_attached(:files) }
+
   let!(:user) { create(:user) }
   let!(:question) { create(:question, user: user) }
   let!(:answers) { create_list(:answer, 3, question: question, user: user) }

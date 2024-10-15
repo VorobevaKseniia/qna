@@ -3,7 +3,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :find_user, only: %i[new create]
-  before_action :find_question, only: %i[show edit update destroy]
+  before_action :find_question, only: %i[show edit update destroy remove_file]
   def index
     @questions = Question.all
     flash[:notion] = 'You need to sign in to write a question' unless user_signed_in?
@@ -43,11 +43,11 @@ class QuestionsController < ApplicationController
   private
 
   def find_question
-    @question = Question.find(params[:id])
+    @question = Question.with_attached_files.find(params[:id])
   end
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, files: [])
   end
 
   def find_user

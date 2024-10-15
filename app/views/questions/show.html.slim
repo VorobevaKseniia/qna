@@ -1,6 +1,6 @@
 .question
   = render @question
-
+.remove-file
 .answers
   .disposal-information
   = render @answers
@@ -11,4 +11,8 @@ h1= 'New answer'
 = form_with model: [@question, @answer], class: 'new-answer', local: false do |f|
   = f.label :body
   = f.text_area :body
+
+  = f.label :files
+  = f.file_field :files, multiple: true, direct_upload: true
+
   = f.submit 'Answer'

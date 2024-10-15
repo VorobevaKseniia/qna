@@ -12,10 +12,12 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answers = @question.answers.sort_by_best
+    @answer.links.new
   end
 
   def new
     @question = @user.questions.new
+    @question.links.new
   end
 
   def edit; end
@@ -47,7 +49,7 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url])
   end
 
   def find_user

@@ -12,6 +12,13 @@ div id="answer-#{answer.id}" class="answer"
                   data: { confirm: 'Are you sure?' },
                   remote: true
 
+  .links
+    -if answer.links.present?
+      p Links:
+      ul
+        - answer.links.each do |link|
+          li= link_to link.name, link.url
+
   -if user_signed_in? && current_user.author?(answer)
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id}
     |  |

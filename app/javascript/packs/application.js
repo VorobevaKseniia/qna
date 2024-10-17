@@ -14,6 +14,7 @@ var jQuery = require("jquery");
 // import jQuery from "jquery";
 global.$ = global.jQuery = jQuery;
 window.$ = window.jQuery = jQuery;
+require("@nathanvda/cocoon")
 
 Rails.start()
 Turbolinks.start()

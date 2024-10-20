@@ -14,19 +14,25 @@ feature 'User can add links to answer', %q{
     sign_in(user)
     visit question_path(question)
 
-    fill_in 'Body', with: 'Answer body'
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
+    within '.new-answer' do
+      fill_in 'Body', with: 'Answer body'
 
-    click_on 'Add link'
+      click_on 'Add link'
+      within all('.nested-fields').first do
+        fill_in 'Link name', with: 'My gist'
+        fill_in 'Url', with: gist_url
+      end
 
-    within all('.nested-fields').last do
-      fill_in 'Link name', with: 'Google'
-      fill_in 'Url', with: google
+      click_on 'Add link'
+      within all('.nested-fields').last do
+        fill_in 'Link name', with: 'Google'
+        fill_in 'Url', with: google
+      end
+
+      click_on 'Answer'
+
     end
-
-    click_on 'Answer'
-    within '.answers' do
+    within '.answers .links' do
       expect(page).to have_link('My gist', href: gist_url)
       expect(page).to have_link('Google', href: google)
     end

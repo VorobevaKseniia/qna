@@ -1,12 +1,6 @@
 .question
   = render @question
 
-.links
-  -if @question.links.present?
-    p Links:
-    ul
-      -@question.links.each do |link|
-        li= link_to link.name, link.url
 .remove-file
 .answers
   .disposal-information
@@ -25,8 +19,6 @@ h1= 'New answer'
   p Links:
   #links-container
     = f.fields_for :links do |l|
-      p
-        = render 'link_fields', f: l
     = link_to_add_association 'Add link', f, :links
 
   = f.submit 'Answer'

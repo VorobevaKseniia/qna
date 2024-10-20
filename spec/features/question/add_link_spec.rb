@@ -16,14 +16,18 @@ feature 'User can add links to question', %q{
     fill_in 'Title', with: 'Question title'
     fill_in 'Body', with: 'Question body'
 
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
     click_on 'Add link'
+    within all('.nested-fields').first do
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'Url', with: gist_url
+    end
 
+    click_on 'Add link'
     within all('.nested-fields').last do
       fill_in 'Link name', with: 'Google'
       fill_in 'Url', with: google
     end
+
     click_on 'Ask'
     expect(page).to have_link('My gist', href: gist_url)
     expect(page).to have_link('Google', href: google)

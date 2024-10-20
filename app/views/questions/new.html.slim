@@ -13,7 +13,5 @@
   p Links:
   #links-container
     = f.fields_for :links do |l|
-      p
-        = render 'link_fields', f: l
     = link_to_add_association 'Add link', f, :links
   p= f.submit 'Ask'

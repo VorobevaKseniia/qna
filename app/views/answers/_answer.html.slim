@@ -33,4 +33,12 @@ div id="answer-#{answer.id}" class="answer"
     = f.text_area :body
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
+
+    #links
+      .answer-links
+        - answer.links.each do |link|
+          div id="link-#{link.id}"
+            p
+              = link.name
+              = (link_to " X", link_path(link), method: :delete, remote: true)
     = f.submit 'Save'

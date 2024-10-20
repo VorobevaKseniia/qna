@@ -6,11 +6,13 @@ feature 'User can add links to question', %q{
   I'd like to be able to add links
 } do
   given(:user) { create(:user) }
+  given(:question) { create(:question, user_id: user.id)}
   given(:gist_url) {'https://gist.github.com/VorobevaKseniia/0a6360fe6375372149c7ff3b9478c3cc'}
   given(:google) {'https://www.google.com'}
 
-  scenario 'User adds links when asks question', js: true do
-    sign_in(user)
+  background { sign_in(user) }
+
+  scenario 'User adds links when creating a new question', js: true do
     visit new_user_question_path(user)
 
     fill_in 'Title', with: 'Question title'
@@ -31,5 +33,20 @@ feature 'User can add links to question', %q{
     click_on 'Ask'
     expect(page).to have_link('My gist', href: gist_url)
     expect(page).to have_link('Google', href: google)
+  end
+
+  scenario 'User adds links when editing a question', js: true do
+    visit question_path(question)
+
+    within '.question' do
+      click_on 'Edit'
+      click_on 'Add link'
+
+      fill_in 'Link name', with: 'Google'
+      fill_in 'Url', with: google
+
+      click_on 'Save'
+      expect(page).to have_link 'Google', href: google
+    end
   end
 end

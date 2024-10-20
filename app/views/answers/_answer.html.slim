@@ -34,6 +34,9 @@ div id="answer-#{answer.id}" class="answer"
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
 
+    #links-container
+      = link_to_add_association 'Add link', f, :links
+
     #links
       .answer-links
         - answer.links.each do |link|

@@ -8,7 +8,7 @@ feature 'User can add links to answer', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user_id: user.id) }
   given!(:answer) { create(:answer, question_id: question.id, user_id: user.id) }
-  given(:gist_url) {'https://gist.github.com/VorobevaKseniia/0a6360fe6375372149c7ff3b9478c3cc'}
+  given(:shoulda) {'https://gist.github.com/VorobevaKseniia/0a6360fe6375372149c7ff3b9478c3cc'}
   given(:google) {'https://www.google.com'}
 
   background do
@@ -22,8 +22,8 @@ feature 'User can add links to answer', %q{
 
       click_on 'Add link'
       within all('.nested-fields').first do
-        fill_in 'Link name', with: 'My gist'
-        fill_in 'Url', with: gist_url
+        fill_in 'Link name', with: 'Shoulda'
+        fill_in 'Url', with: shoulda
       end
 
       click_on 'Add link'
@@ -35,7 +35,7 @@ feature 'User can add links to answer', %q{
       click_on 'Answer'
     end
     within '.answers .links' do
-      expect(page).to have_link('My gist', href: gist_url)
+      expect(page).to have_link('Shoulda', href: shoulda)
       expect(page).to have_link('Google', href: google)
     end
   end

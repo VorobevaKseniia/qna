@@ -7,7 +7,7 @@ feature 'User can add links to question', %q{
 } do
   given(:user) { create(:user) }
   given(:question) { create(:question, user_id: user.id)}
-  given(:gist_url) {'https://gist.github.com/VorobevaKseniia/0a6360fe6375372149c7ff3b9478c3cc'}
+  given(:shoulda) {'http://matchers.shoulda.io/docs/v6.4.0/index.html'}
   given(:google) {'https://www.google.com'}
 
   background { sign_in(user) }
@@ -20,8 +20,8 @@ feature 'User can add links to question', %q{
 
     click_on 'Add link'
     within all('.nested-fields').first do
-      fill_in 'Link name', with: 'My gist'
-      fill_in 'Url', with: gist_url
+      fill_in 'Link name', with: 'Shoulda'
+      fill_in 'Url', with: shoulda
     end
 
     click_on 'Add link'
@@ -31,7 +31,8 @@ feature 'User can add links to question', %q{
     end
 
     click_on 'Ask'
-    expect(page).to have_link('My gist', href: gist_url)
+
+    expect(page).to have_link('Shoulda', href: shoulda)
     expect(page).to have_link('Google', href: google)
   end
 

@@ -15,8 +15,13 @@ p= question.body
     p Links:
     ul
       -@question.links.each do |link|
-        li= link_to link.name, link.url
-
+        li
+          - if link.gist?
+            .gist-content data-gist-url="#{link.url}"
+              / script src="#{link.url}.js" type="text/javascript"
+          - else
+            p
+              = link_to link.name, link.url
 .question-errors
   = render 'shared/errors', resource: @question
 

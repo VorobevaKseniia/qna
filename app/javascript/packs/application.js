@@ -9,6 +9,7 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import "../answers"
 import "../questions"
+import "../links"
 
 var jQuery = require("jquery");
 // import jQuery from "jquery";

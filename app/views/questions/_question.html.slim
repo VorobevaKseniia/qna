@@ -30,6 +30,12 @@ p= question.body
           data: { confirm: 'Are you sure you want to delete the question?' }
   p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
 
+  .award
+    - if @question.award
+      p Award
+      p= @question.award.title
+      = image_tag(@question.award.image)
+
 = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" }, local: false do |f|
   = f.label :title
   = f.text_field :title

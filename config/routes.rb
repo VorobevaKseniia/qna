@@ -15,5 +15,6 @@ Rails.application.routes.draw do
     end
     resources :attachments, shallow: true, only: :destroy
     resources :links, shallow: true, only: :destroy
+    resources :awards, only: :index
   end
 end

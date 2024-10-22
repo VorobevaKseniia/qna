@@ -15,8 +15,10 @@ feature 'User can add links to question', %q{
   scenario 'User adds links when creating a new question', js: true do
     visit new_user_question_path(user)
 
-    fill_in 'Title', with: 'Question title'
-    fill_in 'Body', with: 'Question body'
+    within '.question' do
+      fill_in 'Title', with: 'Question title'
+      fill_in 'Body', with: 'Question body'
+    end
 
     click_on 'Add link'
     within all('.nested-fields').first do

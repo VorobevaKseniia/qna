@@ -18,12 +18,14 @@ class QuestionsController < ApplicationController
   def new
     @question = @user.questions.new
     @question.links.new
+    @question.build_award
   end
 
   def edit; end
 
   def create
     @question = @user.questions.new(question_params)
+    Rails.logger.debug question_params.inspect
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
     else
@@ -49,7 +51,10 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url])
+    params.require(:question).permit(:title, :body,
+                                     files: [],
+                                     links_attributes: [:name, :url],
+                                     award_attributes: [:title, :image])
   end
 
   def find_user

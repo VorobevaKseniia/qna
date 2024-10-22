@@ -34,7 +34,7 @@ p= question.body
     - if @question.award
       p Award
       p= @question.award.title
-      = image_tag(@question.award.image)
+      = image_tag(@question.award.image, size: "50x50")
 
 = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" }, local: false do |f|
   = f.label :title

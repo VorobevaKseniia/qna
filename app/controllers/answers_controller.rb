@@ -18,6 +18,7 @@ class AnswersController < ApplicationController
     if current_user.author?(@answer.question)
       @answer.mark_as_best
       @question = @answer.question
+      @question.award.update(user_id: @answer.user_id)
     end
   end
 

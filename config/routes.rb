@@ -13,8 +13,8 @@ Rails.application.routes.draw do
         end
       end
     end
-    resources :attachments, shallow: true, only: :destroy
-    resources :links, shallow: true, only: :destroy
     resources :awards, only: :index
   end
+  resources :attachments, only: :destroy
+  resources :links, only: :destroy
 end

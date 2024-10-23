@@ -8,7 +8,7 @@ feature 'User can add links to answer', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user_id: user.id) }
   given!(:answer) { create(:answer, question_id: question.id, user_id: user.id) }
-  given(:shoulda) {'https://gist.github.com/VorobevaKseniia/0a6360fe6375372149c7ff3b9478c3cc'}
+  given(:shoulda) {'http://matchers.shoulda.io/docs/v6.4.0/'}
   given(:google) {'https://www.google.com'}
 
   background do

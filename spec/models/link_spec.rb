@@ -13,16 +13,14 @@ RSpec.describe Link, type: :model do
   let!(:link_question) { create(:link, linkable: question, name: "gist", url: "https://gist.github.com/VorobevaKseniia/2971a1aa4a7d0b30e1d3b1b66f79d9f3") }
   let!(:link_answer) { create(:link, linkable: answer, name: "gist", url: "https://gist.github.com/VorobevaKseniia/2971a1aa4a7d0b30e1d3b1b66f79d9f3") }
 
-  context 'Question' do
-    describe '#gist?' do
+  describe '#gist?' do
+    context 'Question' do
       it 'return true if link is gist' do
         expect(link_question.gist?).to eq true
       end
     end
-  end
 
-  context 'Answer' do
-    describe '#gist?' do
+    context 'Answer' do
       it 'return true if link is gist' do
         expect(link_answer.gist?).to eq true
       end

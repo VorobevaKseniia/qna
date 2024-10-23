@@ -25,7 +25,6 @@ class QuestionsController < ApplicationController
 
   def create
     @question = @user.questions.new(question_params)
-    Rails.logger.debug question_params.inspect
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
     else

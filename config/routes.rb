@@ -12,8 +12,9 @@ Rails.application.routes.draw do
           patch :mark_as_best
         end
       end
-
-    resources :attachments, only: :destroy
     end
+    resources :awards, only: :index
   end
+  resources :attachments, only: :destroy
+  resources :links, only: :destroy
 end

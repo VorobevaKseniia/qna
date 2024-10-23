@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user:) }
+  let(:question) { create(:question, user: user) }
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3, user:) }
@@ -32,6 +32,10 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:answer)).to be_a_new(Answer)
     end
 
+    it 'assigns new link for answer' do
+      expect(assigns(:answer).links.first).to be_a_new(Link)
+    end
+
     it 'renders show view' do
       expect(response).to render_template :show
     end
@@ -43,6 +47,14 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns a new question to @question' do
       expect(assigns(:question)).to be_a_new(Question)
+    end
+
+    it 'assigns a new link for question' do
+      expect(assigns(:question).links.first).to be_a_new(Link)
+    end
+
+    it 'assigns an award for question' do
+      expect(assigns(:question).award).to be_a_new(Award)
     end
 
     it 'renders new view' do
@@ -74,6 +86,7 @@ RSpec.describe QuestionsController, type: :controller do
                                   user_id: user.id }
         end.to_not change(Question, :count)
       end
+
       it 're-renders new view' do
         post :create, params: { question: attributes_for(:question, :invalid), user_id: user.id }
         expect(response).to render_template :new

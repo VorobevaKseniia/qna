@@ -101,11 +101,14 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #mark_as_best' do
     before { login(user) }
     let!(:answers) { create_list(:answer, 3, question: question, user: user ) }
+    let!(:award) { create(:award, image: fixture_file_upload("#{Rails.root}/app/assets/images/award.png"),
+                             question: question) }
 
     context 'when user is the author of the question' do
       it 'marks the answer as best' do
         patch :mark_as_best, params: { id: answer.id }, format: :js
         answer.reload
+        award.reload
         expect(answer.best).to be true
         expect(question.answers.where(best: true).count).to eq 1
       end

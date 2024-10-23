@@ -12,6 +12,13 @@ div id="answer-#{answer.id}" class="answer"
                   data: { confirm: 'Are you sure?' },
                   remote: true
 
+  .links
+    -if answer.links.present?
+      p Links:
+      ul
+        - answer.links.each do |link|
+          li= link_to link.name, link.url
+
   -if user_signed_in? && current_user.author?(answer)
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id}
     |  |
@@ -26,4 +33,15 @@ div id="answer-#{answer.id}" class="answer"
     = f.text_area :body
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
+
+    #links-container
+      = link_to_add_association 'Add link', f, :links
+
+    #links
+      .answer-links
+        - answer.links.each do |link|
+          div id="link-#{link.id}"
+            p
+              = link.name
+              = (link_to " X", link_path(link), method: :delete, remote: true)
     = f.submit 'Save'

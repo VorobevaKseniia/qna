@@ -18,6 +18,7 @@ class AnswersController < ApplicationController
     if current_user.author?(@answer.question)
       @answer.mark_as_best
       @question = @answer.question
+      @question.award.update(user_id: @answer.user_id)
     end
   end
 
@@ -37,7 +38,7 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url])
   end
 
   def find_question

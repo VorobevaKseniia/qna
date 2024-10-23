@@ -39,6 +39,7 @@ RSpec.configure do |config|
   config.include FeatureHelpers, type: :feature
 
   Capybara.javascript_driver = :selenium_chrome_headless
+  Capybara.asset_host = 'http://localhost:3000'
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = Rails.root.join('spec/fixtures')

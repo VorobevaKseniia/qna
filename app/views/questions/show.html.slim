@@ -1,5 +1,6 @@
 .question
   = render @question
+
 .remove-file
 .answers
   .disposal-information
@@ -14,5 +15,10 @@ h1= 'New answer'
 
   = f.label :files
   = f.file_field :files, multiple: true, direct_upload: true
+
+  p Links:
+  #links-container
+    = f.fields_for :links do |l|
+    = link_to_add_association 'Add link', f, :links
 
   = f.submit 'Answer'

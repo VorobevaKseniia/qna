@@ -2,6 +2,7 @@
 -if user_signed_in?
   'Welcome,
   b= current_user.email
+  p= link_to 'My awards', user_awards_path(current_user)
   =link_to 'Sign out', destroy_user_session_path, method: :delete
 -else
   p= link_to "Sign in", new_user_session_path

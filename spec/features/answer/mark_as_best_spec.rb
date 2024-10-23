@@ -10,6 +10,8 @@ feature 'User can choose the best answer', %q{
   given!(:question) { create(:question, user: author) }
   given!(:answer) { create(:answer, question: question, user: author) }
   given!(:user) { create(:user) }
+  given!(:award) { create(:award, image: fixture_file_upload("#{Rails.root}/app/assets/images/award.png"),
+                        question: question) }
 
   describe 'Authenticated user' do
     scenario 'tries to choose best answer for their question', js: true do

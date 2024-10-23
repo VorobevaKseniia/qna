@@ -1,0 +1,5 @@
+- @awards.each do |award|
+  h2= award.question.title
+  p
+    = award.title
+    = image_tag(award.image, size: "50x50")

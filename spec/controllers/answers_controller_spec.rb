@@ -27,29 +27,39 @@ RSpec.describe AnswersController, type: :controller do
       it 'saves a new answer in the database' do
         expect { post :create,
                       params: { answer: attributes_for(:answer), question_id: question.id, user_id: user.id },
-                      format: :js
+                      format: :json
         }.to change(question.answers, :count).by(1)
       end
 
-      it 'redirects create template' do
+      it 'returns status :created' do
         post :create,
-             params: { answer: attributes_for(:answer), question_id: question.id, user_id: user.id, format: :js }
-        expect(response).to render_template :create
+             params: { answer: attributes_for(:answer), question_id: question.id, user_id: user.id },
+             format: :json
+        expect(response).to have_http_status(:created)
+      end
+
+      it 'returns the created answer as JSON' do
+        post :create,
+             params: { answer: attributes_for(:answer), question_id: question.id, user_id: user.id },
+             format: :json
+        expect(response.body).to eq(Answer.last.to_json)
       end
     end
 
     context 'with invalid attributes' do
       it 'does not save the answer' do
-        expect { post :create,
-                      params: { answer: attributes_for(:answer, :invalid), question_id: question.id, user_id: user.id },
-                      format: :js
+        expect {
+          post :create, params: { answer: attributes_for(:answer, :invalid),
+                                  question_id: question.id, user_id: user.id }, format: :json
         }.to_not change(Answer, :count)
       end
 
-      it 'renders create template' do
+      it 'returns status :unprocessable_entity with errors' do
         post :create,
-             params: { answer: attributes_for(:answer, :invalid), question_id: question.id, format: :js }
-        expect(response).to render_template :create
+             params: { answer: attributes_for(:answer, :invalid), question_id: question.id, user_id: user.id },
+             format: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to eq(["Body can't be blank"])
       end
     end
   end

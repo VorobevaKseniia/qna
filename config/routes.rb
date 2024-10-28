@@ -17,4 +17,5 @@ Rails.application.routes.draw do
   end
   resources :attachments, only: :destroy
   resources :links, only: :destroy
+  resources :votes, only: %i[create update destroy]
 end

@@ -1,12 +1,23 @@
-.question
-  = render @question
+div.container
+  div.rating-question-row
+    div.rating
+      = button_to votes_path(@question, value: 1, votable_type: 'Question', votable_id: @question.id),
+              method: :post, remote: true do
+        | &#9650;
+        span#like-count #{@question.votes.where(value: 1).count}
+      = button_to votes_path(@question, value: -1, votable_type: 'Question', votable_id: @question.id),
+              method: :post, remote: true do
+        | &#9660;
+        span#dislike-count #{@question.votes.where(value: -1).count}
+    div.question
+      = render @question
 
-.remove-file
-.answers
-  .disposal-information
-  = render @answers
+  .remove-file
+  .answers
+    .disposal-information
+      = render @answers
 
-h1= 'New answer'
+h1 = 'New answer'
 .answer-errors
   = render 'shared/errors', resource: @answer
 = form_with model: [@question, @answer], class: 'new-answer', data: { type: :json }, local: false do |f|
@@ -19,6 +30,6 @@ h1= 'New answer'
   p Links:
   #links-container
     = f.fields_for :links do |l|
-    = link_to_add_association 'Add link', f, :links
+      = link_to_add_association 'Add link', f, :links
 
   = f.submit 'Answer'

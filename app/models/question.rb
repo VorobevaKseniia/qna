@@ -2,6 +2,7 @@
 
 class Question < ApplicationRecord
   include Linkable
+  include Votable
   has_many :answers, dependent: :destroy
   has_one :award, dependent: :destroy
   belongs_to :user
@@ -10,4 +11,8 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :award, reject_if: :all_blank
 
   validates :title, :body, presence: true
+
+  def rating
+    votes.sum(:value)
+  end
 end

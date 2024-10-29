@@ -1,6 +1,18 @@
 div id="answer-#{answer.id}" class="answer"
-  h2= answer.body
-  p= "Best answer" if answer.best
+  div.rating-answer-row
+    div.rating
+      = button_to votes_path(answer, value: 1, votable_type: 'Answer', votable_id: answer.id),
+              method: :post, remote: true do
+        | &#9650;
+        span id="likes-#{answer.id}" #{answer.likes}
+      span id="rating-#{answer.id}" #{answer.rating}
+      = button_to votes_path(answer, value: -1, votable_type: 'Answer', votable_id: answer.id),
+              method: :post, remote: true do
+        | &#9660;
+        span id="dislikes-#{answer.id}" #{answer.dislikes}
+    div.answer
+      h2= answer.body
+      p= "Best answer" if answer.best
 
   - if answer.files.attached?
     - answer.files.each do |file|

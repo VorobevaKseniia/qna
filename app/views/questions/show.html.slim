@@ -4,11 +4,12 @@ div.container
       = button_to votes_path(@question, value: 1, votable_type: 'Question', votable_id: @question.id),
               method: :post, remote: true do
         | &#9650;
-        span#like-count #{@question.votes.where(value: 1).count}
+        span id="likes-#{@question.id}" #{@question.likes}
+      span id="rating-#{@question.id}" #{@question.rating}
       = button_to votes_path(@question, value: -1, votable_type: 'Question', votable_id: @question.id),
               method: :post, remote: true do
         | &#9660;
-        span#dislike-count #{@question.votes.where(value: -1).count}
+        span id="dislikes-#{@question.id}" #{@question.dislikes}
     div.question
       = render @question
 

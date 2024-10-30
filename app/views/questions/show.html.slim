@@ -1,18 +1,31 @@
 div.container
   div.rating-question-row
     div.rating
-      = button_to votes_path(@question, value: 1, votable_type: 'Question', votable_id: @question.id),
-              method: :post, remote: true do
-        | &#9650;
-        span id="likes-#{@question.id}" #{@question.likes}
-      span id="rating-#{@question.id}" #{@question.rating}
-      = button_to votes_path(@question, value: -1, votable_type: 'Question', votable_id: @question.id),
-              method: :post, remote: true do
-        | &#9660;
-        span id="dislikes-#{@question.id}" #{@question.dislikes}
+      - if user_signed_in?
+        = button_to vote_votes_path(value: 1, votable_id: @question.id, votable_type: @question.class.name),
+                remote: true,
+                method: :post,
+                data: { votable_id: @question.id, value: 1 } do
+          | &#9650;
+          span id="likes-#{@question.id}" #{@question.likes}
+        span id="rating-#{@question.id}" #{@question.rating}
+        = button_to vote_votes_path(value: -1, votable_id: @question.id, votable_type: @question.class.name),
+                remote: true,
+                method: :post,
+                data: { votable_id: @question.id, value: -1 } do
+          | &#9660;
+          span id="dislikes-#{@question.id}" #{@question.dislikes}
+      - else
+        button.vote-button onclick="showLoginAlert()"
+          | &#9650;
+          span #{@question.likes}
+        span #{@question.rating}
+        button.vote-button onclick="showLoginAlert()"
+          | &#9660;
+          span #{@question.dislikes}
     div.question
       = render @question
-
+  .vote-errors
   .remove-file
   .answers
     .disposal-information

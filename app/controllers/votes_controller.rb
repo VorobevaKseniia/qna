@@ -1,44 +1,49 @@
 class VotesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :find_votable, only: %i[create destroy]
-  before_action :find_vote, only: :destroy
+  before_action :find_votable
+  before_action :check_author
+  before_action :find_or_initialize_vote
 
-  def create
-    @vote = @votable.votes.find_or_initialize_by(user: current_user)
-    if !current_user.author?(@votable)
-      if @vote.value != params[:value].to_i
-        @vote.value = params[:value]
-        if @vote.save
-          render json: { id: @vote.id,
-                         value: @vote.value,
-                         votable_id: @votable.id,
-                         rating: @votable.rating,
-                         likes: @votable.votes.where(value: 1).count,
-                         dislikes: @votable.votes.where(value: -1).count },
-                 status: :created
-        end
+  def vote
+    if @vote.persisted?
+      if @vote.value == params[:value].to_i
+        @vote.destroy
+        render_vote_response(status: :ok)
       else
-        destroy
+        @vote.update(value: params[:value])
+        render_vote_response(status: :ok)
+      end
+    else
+      @vote.value = params[:value]
+      if @vote.save
+        render_vote_response(status: :created)
       end
     end
   end
 
-  def destroy
-    @vote.destroy
-    render json: { votable_id: @votable.id,
-                   rating: @votable.rating,
-                   likes: @votable.votes.where(value: 1).count,
-                   dislikes: @votable.votes.where(value: -1).count },
-           status: :ok
+  private
+
+  def check_author
+    return unless current_user.author?(@votable)
+
+    render json: { error: "Author cannot vote for own #{@votable.class.name.downcase}" }, status: :unprocessable_entity
   end
 
-  private
+  def find_or_initialize_vote
+    @vote = @votable.votes.find_or_initialize_by(user: current_user)
+  end
 
   def find_votable
     @votable = params[:votable_type].constantize.find(params[:votable_id])
   end
 
-  def find_vote
-    @vote = Vote.find(params[:id])
+  def render_vote_response(status:)
+    render json: { id: @vote&.id,
+                   value: @vote&.value,
+                   votable_id: @votable.id,
+                   votable_type: @votable.class.name,
+                   rating: @votable.rating,
+                   likes: @votable.likes,
+                   dislikes: @votable.dislikes },
+           status: status
   end
 end

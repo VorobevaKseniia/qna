@@ -1,15 +1,28 @@
 div id="answer-#{answer.id}" class="answer"
   div.rating-answer-row
     div.rating
-      = button_to votes_path(answer, value: 1, votable_type: 'Answer', votable_id: answer.id),
-              method: :post, remote: true do
-        | &#9650;
-        span id="likes-#{answer.id}" #{answer.likes}
-      span id="rating-#{answer.id}" #{answer.rating}
-      = button_to votes_path(answer, value: -1, votable_type: 'Answer', votable_id: answer.id),
-              method: :post, remote: true do
-        | &#9660;
-        span id="dislikes-#{answer.id}" #{answer.dislikes}
+      - if user_signed_in?
+        = button_to vote_votes_path(value: 1, votable_id: answer.id, votable_type: answer.class.name),
+                remote: true,
+                method: :post,
+                data: { votable_id: answer.id, value: 1 } do
+          | &#9650;
+          span id="likes-#{answer.id}" #{answer.likes}
+        span id="rating-#{answer.id}" #{answer.rating}
+        = button_to vote_votes_path(value: -1, votable_id: answer.id, votable_type: answer.class.name),
+                remote: true,
+                method: :post,
+                data: { votable_id: answer.id, value: -1 } do
+          | &#9660;
+          span id="dislikes-#{answer.id}" #{answer.dislikes}
+      -else
+        button.vote-button onclick="showLoginAlert()"
+          | &#9650;
+          span #{@question.likes}
+        span #{@question.rating}
+        button.vote-button onclick="showLoginAlert()"
+          | &#9660;
+          span #{@question.dislikes}
     div.answer
       h2= answer.body
       p= "Best answer" if answer.best

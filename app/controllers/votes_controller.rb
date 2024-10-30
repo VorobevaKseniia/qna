@@ -1,4 +1,5 @@
 class VotesController < ApplicationController
+  before_action :authenticate_user!
   before_action :find_votable
   before_action :check_author
   before_action :find_or_initialize_vote

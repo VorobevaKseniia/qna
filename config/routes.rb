@@ -17,4 +17,9 @@ Rails.application.routes.draw do
   end
   resources :attachments, only: :destroy
   resources :links, only: :destroy
+  resources :votes, only: [] do
+    collection do
+      post :vote
+    end
+  end
 end

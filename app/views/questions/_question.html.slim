@@ -18,7 +18,6 @@ p= question.body
         li
           - if link.gist?
             .gist-content data-gist-url="#{link.url}"
-              / script src="#{link.url}.js" type="text/javascript"
           - else
             p
               = link_to link.name, link.url

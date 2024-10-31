@@ -10,6 +10,8 @@ import "channels"
 import "../answers"
 import "../questions"
 import "../links"
+import "../votes"
+import "../alerts"
 
 var jQuery = require("jquery");
 // import jQuery from "jquery";

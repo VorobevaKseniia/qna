@@ -1,0 +1,33 @@
+// Place all the styles related to the Votes controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.rating-question-row, .rating-answer-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.rating {
+  width: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.question {
+  width: 95%;
+}
+
+.remove-file,
+.answers,
+.answer-errors,
+form.new-answer {
+  width: 100%;
+  margin-top: 20px;
+}

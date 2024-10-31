@@ -11,7 +11,17 @@ class AnswersController < ApplicationController
   def create
     @answer = current_user.answers.new(answer_params)
     @answer.question = @question
-    @answer.save
+
+
+    respond_to do |format|
+      if @answer.save
+        format.json { render json: @answer, status: :created }
+      else
+        format.json do
+          render json: @answer.errors.full_messages, status: :unprocessable_entity
+        end
+      end
+    end
   end
 
   def mark_as_best

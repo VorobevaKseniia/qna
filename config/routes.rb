@@ -22,4 +22,6 @@ Rails.application.routes.draw do
       post :vote
     end
   end
+
+  mount ActionCable.server => '/cable'
 end

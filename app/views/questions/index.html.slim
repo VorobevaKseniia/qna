@@ -3,6 +3,6 @@
 -else
   p= link_to 'Ask question', new_user_session_path
 
-- @questions.each do |question|
-  h2= question.title
-  = link_to 'Show', question_path(question)
+.questions
+  - @questions.each do |question|
+    h1 = link_to question.title, question_path(question)

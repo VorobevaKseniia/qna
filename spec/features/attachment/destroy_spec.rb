@@ -67,7 +67,7 @@ feature 'User can delete file when editing a question/answer', %q{
           end
         end
         expect(page).to have_content 'Your file successfully deleted.'
-        within '.answers' do
+        within ".answers #answer-#{answer.id}" do
           expect(page).to_not have_link(answer.files.first.filename.to_s)
         end
       end

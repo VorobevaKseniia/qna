@@ -79,10 +79,10 @@ feature 'User can create a question', "
     end
   end
 
-  scenario 'Unauthenticated user tries to ask a question' do
-    visit user_questions_path(user)
+  scenario 'Unauthenticated user tries to ask a question', js: true do
+    visit user_questions_path(guest)
     click_on 'Ask question'
 
-    expect(page).to have_content 'You need to sign in to write a question'
+    expect(page).to have_selector('.alert-box', text: 'You need to sign in')
   end
 end

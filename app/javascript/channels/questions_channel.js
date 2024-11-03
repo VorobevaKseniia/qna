@@ -10,6 +10,6 @@ consumer.subscriptions.create("QuestionsChannel", {
   },
 
   received(data) {
-    $('.questions').append(`<h1><a href="questions/${data.id}">${data.title}</a></h1>`);
+    $('.questions').append(`<h2><a href="questions/${data.id}">${data.title}</a></h2>`);
   }
 });

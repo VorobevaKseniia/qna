@@ -70,7 +70,7 @@ feature 'User can vote for question/answer', "
       within ".rating-#{votable.class.name.downcase}-row" do
         click_button '▲'
       end
-      expect(page).to have_selector('.alert-box', text: 'You need to sign in to vote')
+      expect(page).to have_selector('.alert-box', text: 'You need to sign in')
     end
   end
 

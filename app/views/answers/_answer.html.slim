@@ -73,3 +73,17 @@ div id="answer-#{answer.id}" class="answer"
               = link.name
               = (link_to " X", link_path(link), method: :delete, remote: true)
     = f.submit 'Save'
+
+  .comments
+    - if answer.comments.present?
+      - answer.comments.each do |comment|
+        p= comment.body
+
+  .comment-errors
+  div.new-comment data-commentable-type="Answer" data-commentable-id=answer.id
+    = form_with model: [answer, @comment], local: false do |f|
+      = f.text_area :body
+      - if user_signed_in?
+        = f.submit 'Comment'
+      - else
+        = f.submit 'Comment', onclick: 'showLoginAlert();'

@@ -25,11 +25,26 @@ div.container
           span #{@question.dislikes}
     div.question
       = render @question
+
+      .comments
+        - if @question.comments.present?
+          - @question.comments.each do |comment|
+            p= comment.body
+
+      .comment-errors
+      div.new-comment data-commentable-type="Question" data-commentable-id=@question.id
+        = form_with model: [@question, @comment], local: false do |f|
+          = f.text_area :body
+          - if user_signed_in?
+            = f.submit 'Comment'
+          - else
+            = f.submit 'Comment', onclick: 'showLoginAlert();'
+
   .vote-errors
   .remove-file
   .answers
-    .disposal-information
     = render @answers
+    .disposal-information
 
 h1 = 'New answer'
 .answer-errors

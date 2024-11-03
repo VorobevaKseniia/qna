@@ -37,13 +37,6 @@ RSpec.describe AnswersController, type: :controller do
              format: :json
         expect(response).to have_http_status(:created)
       end
-
-      it 'returns the created answer as JSON' do
-        post :create,
-             params: { answer: attributes_for(:answer), question_id: question.id, user_id: user.id },
-             format: :json
-        expect(response.body).to eq(Answer.last.to_json)
-      end
     end
 
     context 'with invalid attributes' do
@@ -59,7 +52,6 @@ RSpec.describe AnswersController, type: :controller do
              params: { answer: attributes_for(:answer, :invalid), question_id: question.id, user_id: user.id },
              format: :json
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)).to eq(["Body can't be blank"])
       end
     end
   end

@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: %i[new create]
   before_action :find_answer, only: %i[mark_as_best show edit update destroy remove_file]
+  before_action :set_comment, only: %i[edit update mark_as_best]
 
   after_action :publish_answer, only: [:create]
   def new
@@ -14,14 +15,10 @@ class AnswersController < ApplicationController
     @answer = current_user.answers.new(answer_params)
     @answer.question = @question
 
-    respond_to do |format|
-      if @answer.save
-        format.json { render json: @answer, status: :created }
-      else
-        format.json do
-          render json: @answer.errors.full_messages, status: :unprocessable_entity
-        end
-      end
+    if @answer.save
+      head :created
+    else
+      head :unprocessable_entity
     end
   end
 
@@ -47,6 +44,10 @@ class AnswersController < ApplicationController
   end
 
   private
+
+  def set_comment
+    @comment = Comment.new
+  end
 
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url, :_destroy])

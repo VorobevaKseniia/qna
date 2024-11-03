@@ -8,15 +8,16 @@ class QuestionsController < ApplicationController
   after_action :publish_question, only: [:create]
   def index
     @questions = Question.all
-    flash[:notion] = 'You need to sign in to write a question' unless user_signed_in?
   end
 
   def show
+    puts params.inspect
     @answer = Answer.new
     @answers = @question.answers.sort_by_best
     @answer.links.new
     gon.question_id = @question.id
     gon.current_user = current_user
+    @comment = Comment.new
   end
 
   def new

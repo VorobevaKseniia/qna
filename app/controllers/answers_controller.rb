@@ -4,6 +4,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: %i[new create]
   before_action :find_answer, only: %i[mark_as_best show edit update destroy remove_file]
+
+  after_action :publish_answer, only: [:create]
   def new
     @answer = current_user.answers.new(question: @question)
   end
@@ -11,7 +13,6 @@ class AnswersController < ApplicationController
   def create
     @answer = current_user.answers.new(answer_params)
     @answer.question = @question
-
 
     respond_to do |format|
       if @answer.save
@@ -48,7 +49,7 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url])
+    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url, :_destroy])
   end
 
   def find_question
@@ -57,5 +58,22 @@ class AnswersController < ApplicationController
 
   def find_answer
     @answer = Answer.with_attached_files.find(params[:id])
+  end
+
+  def publish_answer
+    if @answer.errors.any?
+      ActionCable.server.broadcast("questions/#{@answer.question_id}", {
+        errors: @answer.errors.full_messages
+      })
+    else
+      ActionCable.server.broadcast("questions/#{@answer.question_id}", {
+        answer: @answer,
+        files: @answer.files.map { |file| { url: url_for(file), filename: file.filename.to_s } },
+        links: @answer.links.map { |link| { url: link.url, name: link.name } },
+        rating: @answer.rating,
+        likes: @answer.likes,
+        dislikes: @answer.dislikes
+      })
+    end
   end
 end

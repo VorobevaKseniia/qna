@@ -15,6 +15,8 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answers = @question.answers.sort_by_best
     @answer.links.new
+    gon.question_id = @question.id
+    gon.current_user = current_user
   end
 
   def new

@@ -13,6 +13,7 @@ import "../questions"
 import "../links"
 import "../votes"
 import "../alerts"
+import "../comments"
 
 var jQuery = require("jquery");
 // import jQuery from "jquery";

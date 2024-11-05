@@ -11,7 +11,6 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    puts params.inspect
     @answer = Answer.new
     @answers = @question.answers.sort_by_best
     @answer.links.new

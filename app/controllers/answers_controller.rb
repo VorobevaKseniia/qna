@@ -18,7 +18,7 @@ class AnswersController < ApplicationController
     if @answer.save
       head :created
     else
-      head :unprocessable_entity
+      render json: @answer.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -62,19 +62,8 @@ class AnswersController < ApplicationController
   end
 
   def publish_answer
-    if @answer.errors.any?
-      ActionCable.server.broadcast("questions/#{@answer.question_id}", {
-        errors: @answer.errors.full_messages
-      })
-    else
-      ActionCable.server.broadcast("questions/#{@answer.question_id}", {
-        answer: @answer,
-        files: @answer.files.map { |file| { url: url_for(file), filename: file.filename.to_s } },
-        links: @answer.links.map { |link| { url: link.url, name: link.name } },
-        rating: @answer.rating,
-        likes: @answer.likes,
-        dislikes: @answer.dislikes
-      })
-    end
+    return if @answer.errors.any?
+
+    ActionCable.server.broadcast("questions/#{@answer.question_id}", @answer)
   end
 end

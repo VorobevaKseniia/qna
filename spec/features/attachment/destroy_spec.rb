@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'User can delete a question/answer file', %q{
+feature 'User can delete file when editing a question/answer', %q{
   In order to delete a question/answer file
   As an author of question/answer
   I'd like to be able to remove a question/answer file
@@ -23,6 +23,7 @@ feature 'User can delete a question/answer file', %q{
         visit question_path(question)
 
         within '.question' do
+          click_on 'Edit'
           accept_confirm 'Are you sure?' do
             click_on 'X'
           end
@@ -58,12 +59,15 @@ feature 'User can delete a question/answer file', %q{
         visit question_path(question)
 
         within '.answers' do
-          accept_confirm 'Are you sure?' do
-            click_on 'X'
+          click_on 'Edit'
+          within '#files' do
+            accept_confirm 'Are you sure?' do
+              click_on 'X'
+            end
           end
         end
         expect(page).to have_content 'Your file successfully deleted.'
-        within '.answers' do
+        within ".answers #answer-#{answer.id}" do
           expect(page).to_not have_link(answer.files.first.filename.to_s)
         end
       end
@@ -73,7 +77,7 @@ feature 'User can delete a question/answer file', %q{
         visit question_path(question)
 
         within '.answers' do
-          expect(page).to_not have_link 'X'
+          expect(page).to_not have_link 'Edit'
         end
       end
     end
@@ -81,7 +85,7 @@ feature 'User can delete a question/answer file', %q{
     scenario 'Unauthenticated user tries to delete an answer file' do
       visit question_path(question)
       within '.answers' do
-        expect(page).to_not have_link 'X'
+        expect(page).to_not have_link 'Edit'
       end
     end
   end

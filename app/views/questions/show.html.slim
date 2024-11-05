@@ -25,16 +25,29 @@ div.container
           span #{@question.dislikes}
     div.question
       = render @question
+
+      .comments
+        - if @question.comments.present?
+          - @question.comments.each do |comment|
+            p= comment.body
+
+      .comment-errors
+      = form_with model: [@question, @comment], class: 'new-comment', data: { commentable_type: 'Question', commentable_id: @question.id }, local: false do |f|
+        = f.text_area :body
+        - if user_signed_in?
+          = f.submit 'Comment'
+        - else
+          = f.submit 'Comment', onclick: 'showLoginAlert();'
+
   .vote-errors
   .remove-file
   .answers
+    = render @answers
     .disposal-information
-      = render @answers
 
 h1 = 'New answer'
 .answer-errors
-  = render 'shared/errors', resource: @answer
-= form_with model: [@question, @answer], class: 'new-answer', data: { type: :json }, local: false do |f|
+= form_with model: [@question, @answer], class: 'new-answer', local: false do |f|
   = f.label :body
   = f.text_area :body
 
@@ -44,6 +57,6 @@ h1 = 'New answer'
   p Links:
   #links-container
     = f.fields_for :links do |l|
-      = link_to_add_association 'Add link', f, :links
+    = link_to_add_association 'Add link', f, :links
 
   = f.submit 'Answer'

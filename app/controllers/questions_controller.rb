@@ -4,15 +4,19 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :find_user, only: %i[new create]
   before_action :find_question, only: %i[show edit update destroy remove_file]
+
+  after_action :publish_question, only: [:create]
   def index
     @questions = Question.all
-    flash[:notion] = 'You need to sign in to write a question' unless user_signed_in?
   end
 
   def show
     @answer = Answer.new
     @answers = @question.answers.sort_by_best
     @answer.links.new
+    gon.question_id = @question.id
+    gon.current_user = current_user
+    @comment = Comment.new
   end
 
   def new
@@ -58,5 +62,11 @@ class QuestionsController < ApplicationController
 
   def find_user
     @user = User.find(params[:user_id])
+  end
+
+  def publish_question
+    return if @question.errors.any?
+
+    ActionCable.server.broadcast('questions', @question)
   end
 end

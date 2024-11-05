@@ -18,24 +18,27 @@ div id="answer-#{answer.id}" class="answer"
       -else
         button.vote-button onclick="showLoginAlert()"
           | &#9650;
-          span #{@question.likes}
-        span #{@question.rating}
+          span #{answer.likes}
+        span #{answer.rating}
         button.vote-button onclick="showLoginAlert()"
           | &#9660;
-          span #{@question.dislikes}
+          span #{answer.dislikes}
     div.answer
       h2= answer.body
       p= "Best answer" if answer.best
 
-  - if answer.files.attached?
+  - if user_signed_in? && current_user.author?(answer)
+    = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    |  |
+    = link_to 'Delete answer', answer_path(answer), method: :delete,
+            data: { confirm: 'Are you sure?' }, remote: true
+    - if user_signed_in? && current_user.author?(answer.question)
+      p= link_to 'Mark as best', mark_as_best_answer_path(answer), method: :patch, remote: true
+
+  .files
+    - if answer.files.attached?
     - answer.files.each do |file|
-      p id="file_#{file.id}"
-        = link_to file.filename.to_s, url_for(file)
-        - if user_signed_in? && current_user.author?(answer)
-          = link_to ' X', attachment_path(file),
-                  method: :delete,
-                  data: { confirm: 'Are you sure?' },
-                  remote: true
+      = link_to file.filename.to_s, url_for(file)
 
   .links
     -if answer.links.present?
@@ -44,20 +47,20 @@ div id="answer-#{answer.id}" class="answer"
         - answer.links.each do |link|
           li= link_to link.name, link.url
 
-  -if user_signed_in? && current_user.author?(answer)
-    = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id}
-    |  |
-    = link_to 'Delete answer', answer_path(answer), method: :delete,
-            data: { confirm: 'Are you sure?' }, remote: true
-  - if user_signed_in? && current_user.author?(answer.question)
-    p= link_to 'Mark as best', mark_as_best_answer_path(answer), method: :patch, remote: true
-
-
   = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
     = f.label :body
     = f.text_area :body
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
+
+    #files
+      - answer.files.each do |file|
+        p id="file_#{file.id}"
+          = link_to file.filename.to_s, url_for(file)
+          = link_to ' X', attachment_path(file),
+                    method: :delete,
+                    data: { confirm: 'Are you sure?' },
+                    remote: true
 
     #links-container
       = link_to_add_association 'Add link', f, :links
@@ -70,3 +73,16 @@ div id="answer-#{answer.id}" class="answer"
               = link.name
               = (link_to " X", link_path(link), method: :delete, remote: true)
     = f.submit 'Save'
+
+  .comments
+    - if answer.comments.present?
+      - answer.comments.each do |comment|
+        p= comment.body
+
+  .comment-errors
+  = form_with model: [answer, @comment], class: 'new-comment', data: { commentable_type: 'Answer', commentable_id: answer.id }, local: false do |f|
+    = f.text_area :body
+    - if user_signed_in?
+      = f.submit 'Comment'
+    - else
+      = f.submit 'Comment', onclick: 'showLoginAlert();'

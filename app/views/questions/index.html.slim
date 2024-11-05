@@ -1,8 +1,9 @@
 -if user_signed_in?
   p= link_to 'Ask question', new_user_question_path(current_user)
--else
-  p= link_to 'Ask question', new_user_session_path
+- else
+  p = link_to 'Ask question', '#', onclick: 'showLoginAlert(); return false;'
 
-- @questions.each do |question|
-  h2= question.title
-  = link_to 'Show', question_path(question)
+
+.questions
+  - @questions.each do |question|
+    h2 = link_to question.title, question_path(question)

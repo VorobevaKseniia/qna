@@ -8,6 +8,7 @@ feature 'User can create a question', "
   I'd like to be able to ask question
 " do
   given(:user) { create(:user) }
+  given(:guest) { create(:user) }
 
   describe 'Authenticated user' do
     background do
@@ -45,12 +46,43 @@ feature 'User can create a question', "
       expect(page).to have_link 'rails_helper.rb'
       expect(page).to have_link 'spec_helper.rb'
     end
+
+    context 'multiple sessions' do
+      scenario "question appears on another user's page", js: true do
+        Capybara.using_session('user') do
+          sign_in(user)
+          visit user_questions_path(user)
+        end
+
+        Capybara.using_session('guest') do
+          visit user_questions_path(guest)
+        end
+
+        Capybara.using_session('user') do
+          click_on 'Ask question'
+
+          within '.question' do
+            fill_in 'Title', with: 'Question title'
+            fill_in 'Body', with: 'Question body'
+          end
+
+          click_on 'Ask'
+          expect(page).to have_content 'Your question successfully created.'
+          expect(page).to have_content 'Question title'
+          expect(page).to have_content 'Question body'
+        end
+
+        Capybara.using_session('guest') do
+          expect(page).to have_content 'Question title'
+        end
+      end
+    end
   end
 
-  scenario 'Unauthenticated user tries to ask a question' do
-    visit user_questions_path(user)
+  scenario 'Unauthenticated user tries to ask a question', js: true do
+    visit user_questions_path(guest)
     click_on 'Ask question'
 
-    expect(page).to have_content 'You need to sign in to write a question'
+    expect(page).to have_selector('.alert-box', text: 'You need to sign in')
   end
 end

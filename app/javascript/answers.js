@@ -6,15 +6,17 @@ $(document).on('turbolinks:load', function(){
     $('form#edit-answer-' + answerId).removeClass('hidden');
   });
 
-  $('form.new-answer').on('ajax:success', function(e) {
-    let answer = e.detail[0];
+  $('form.new-answer').on('ajax:success', function() {
+    $('.answers').append('<p> Your answer successfully created. </p>');
+  });
 
-    $('.answers').append('<h2>' + answer.body + '</h2>');
-  })
-    .on('ajax:error', function(e) {
-      let errors = e.detail[0];
-      $.each(errors, function(index, value){
-        $('.answer-errors').append('<p>' + value + '</p>')
-      })
+  $('form.new-answer').on('ajax:error', function(e) {
+    let errors = e.detail[0];
+
+    $('.answer-errors').empty();
+
+    $.each(errors, function(index, value){
+      $('.answer-errors').append('<p>' + value + '</p>')
     })
+  })
 });

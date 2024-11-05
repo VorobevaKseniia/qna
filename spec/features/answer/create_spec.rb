@@ -40,6 +40,33 @@ feature 'User can create an answer', "
     #   expect(page).to have_link 'rails_helper.rb'
     #   expect(page).to have_link 'spec_helper.rb'
     # end
+
+    context 'multiple sessions' do
+      scenario "answer appears on another user's page", js: true do
+        Capybara.using_session('user') do
+          sign_in(user)
+          visit question_path(question)
+        end
+
+        Capybara.using_session('guest') do
+          visit question_path(question)
+        end
+
+        Capybara.using_session('user') do
+          within '.new-answer' do
+            fill_in 'Body', with: 'Answer body'
+            click_on 'Answer'
+          end
+
+          expect(page).to have_content 'Your answer successfully created.'
+          expect(page).to have_content 'Answer body'
+        end
+
+        Capybara.using_session('guest') do
+          expect(page).to have_content 'Answer body'
+        end
+      end
+    end
   end
 
   scenario 'Unauthenticated user tries to answer the question' do

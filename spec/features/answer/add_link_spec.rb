@@ -40,7 +40,7 @@ feature 'User can add links to answer', %q{
     end
   end
 
-  scenario 'User adds links when editing a question', js: true do
+  scenario 'User adds links when editing a answer', js: true do
     within '.answers' do
       click_on 'Edit'
       click_on 'Add link'

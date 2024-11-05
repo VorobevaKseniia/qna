@@ -64,41 +64,4 @@ RSpec.describe CommentsController, type: :controller do
       end
     end
   end
-
-  # shared_examples 'create comment' do |commentable_type, commentable_mod|
-  #   let(:commentable) { send(commentable_mod) }
-  #
-  #   before { login(user) }
-  #
-  #   describe 'POST #create' do
-  #     context 'with valid attributes' do
-  #       it 'saves a new comment in the database' do
-  #         expect {
-  #           post :create, params: { comment: attributes_for(:comment), "#{commentable_type}_id": commentable.id }, format: :json
-  #         }.to change(commentable.comments, :count).by(1)
-  #       end
-  #
-  #       it 'returns status :created' do
-  #         post :create, params: { comment: attributes_for(:comment), "#{commentable_type}_id": commentable.id }, format: :json
-  #         expect(response).to have_http_status(:created)
-  #       end
-  #     end
-  #
-  #     context 'with invalid attributes' do
-  #       it 'does not save the comment' do
-  #         expect {
-  #           post :create, params: { comment: attributes_for(:comment, :invalid), "#{commentable_type}_id": commentable.id }, format: :json
-  #         }.not_to change(Comment, :count)
-  #       end
-  #
-  #       it 'returns status :unprocessable_entity' do
-  #         post :create, params: { comment: attributes_for(:comment, :invalid), "#{commentable_type}_id": commentable.id }, format: :json
-  #         expect(response).to have_http_status(:unprocessable_entity)
-  #       end
-  #     end
-  #   end
-  # end
-  #
-  # include_examples 'create comment', 'question', :question
-  # include_examples 'create comment', 'answer', :answer
 end

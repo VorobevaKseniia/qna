@@ -35,6 +35,7 @@ gem 'jquery-rails'
 gem 'slim-rails'
 gem 'omniauth'
 gem 'omniauth-github'
+gem 'omniauth-facebook'
 gem 'omniauth-rails_csrf_protection'
 
 group :development, :test do

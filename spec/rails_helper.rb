@@ -83,3 +83,12 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+OmniAuth.config.test_mode = true
+
+RSpec.configure do |config|
+  config.before(:each) do
+    OmniAuth.config.mock_auth[:github] = nil
+    OmniAuth.config.mock_auth[:facebook] = nil
+  end
+end

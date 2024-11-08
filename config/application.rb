@@ -22,6 +22,7 @@ module Qna
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.action_cable.disable_request_forgery_protection = false
+    require_dependency Rails.root.join('app/services/find_for_oauth.rb')
 
     config.generators do |g|
       g.test_framework :rspec,

@@ -1,7 +1,7 @@
 div id="answer-#{answer.id}" class="answer"
   div.rating-answer-row
     div.rating
-      - if user_signed_in?
+      - if can?(:vote, answer)
         = button_to vote_votes_path(value: 1, votable_id: answer.id, votable_type: answer.class.name),
                 remote: true,
                 method: :post,
@@ -27,18 +27,19 @@ div id="answer-#{answer.id}" class="answer"
       h2= answer.body
       p= "Best answer" if answer.best
 
-  - if user_signed_in? && current_user.author?(answer)
+  - if can?([:update, :destroy], answer)
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     |  |
     = link_to 'Delete answer', answer_path(answer), method: :delete,
             data: { confirm: 'Are you sure?' }, remote: true
-    - if user_signed_in? && current_user.author?(answer.question)
+
+    - if can?(:mark_as_best, answer)
       p= link_to 'Mark as best', mark_as_best_answer_path(answer), method: :patch, remote: true
 
   .files
     - if answer.files.attached?
-    - answer.files.each do |file|
-      = link_to file.filename.to_s, url_for(file)
+      - answer.files.each do |file|
+        = link_to file.filename.to_s, url_for(file)
 
   .links
     -if answer.links.present?
@@ -82,7 +83,4 @@ div id="answer-#{answer.id}" class="answer"
   .comment-errors
   = form_with model: [answer, @comment], class: 'new-comment', data: { commentable_type: 'Answer', commentable_id: answer.id }, local: false do |f|
     = f.text_area :body
-    - if user_signed_in?
-      = f.submit 'Comment'
-    - else
-      = f.submit 'Comment', onclick: 'showLoginAlert();'
+    = conditional_submit_button(f, 'Comment', :create)

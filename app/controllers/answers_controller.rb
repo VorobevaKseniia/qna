@@ -7,6 +7,7 @@ class AnswersController < ApplicationController
   before_action :set_comment, only: %i[edit update mark_as_best]
 
   after_action :publish_answer, only: [:create]
+  authorize_resource
   def new
     @answer = current_user.answers.new(question: @question)
   end
@@ -35,12 +36,12 @@ class AnswersController < ApplicationController
   def edit; end
 
   def update
-    @answer.update(answer_params) if current_user.author?(@answer)
+    @answer.update(answer_params)
     @question = @answer.question
   end
 
   def destroy
-    @answer.destroy if current_user.author?(@answer)
+    @answer.destroy
   end
 
   private

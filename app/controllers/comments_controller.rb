@@ -3,6 +3,7 @@ class CommentsController < ApplicationController
   before_action :find_commentable, only: :create
 
   after_action :publish_comment, only: [:create]
+  authorize_resource
 
   def create
     @comment = current_user.comments.new(comment_params)

@@ -5,6 +5,8 @@ class VotesController < ApplicationController
   before_action :find_or_initialize_vote
 
   def vote
+    authorize! :vote, @votable
+
     if @vote.persisted?
       if @vote.value == params[:value].to_i
         @vote.destroy
@@ -24,9 +26,9 @@ class VotesController < ApplicationController
   private
 
   def check_author
-    return unless current_user.author?(@votable)
-
-    render json: { error: "Author cannot vote for own #{@votable.class.name.downcase}" }, status: :unprocessable_entity
+    unless can?(:vote, @votable)
+      render json: { error: "Author cannot vote for own #{@votable.class.name.downcase}" }, status: :unprocessable_entity
+    end
   end
 
   def find_or_initialize_vote

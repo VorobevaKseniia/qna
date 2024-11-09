@@ -1,6 +1,6 @@
--if user_signed_in?
+-if can?(:create, Question)
   p= link_to 'Ask question', new_user_question_path(current_user)
-- else
+-else
   p = link_to 'Ask question', '#', onclick: 'showLoginAlert(); return false;'
 
 

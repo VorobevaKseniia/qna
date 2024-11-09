@@ -3,13 +3,8 @@ p= question.body
 
 - if @question.files.attached?
   - @question.files.each do |file|
-    p id="file_#{file.id}"
-      = link_to file.filename.to_s, url_for(file)
-      - if user_signed_in? && current_user.author?(@question)
-        = link_to ' X', attachment_path(file),
-                method: :delete,
-                data: { confirm: 'Are you sure?' },
-                remote: true
+    = link_to file.filename.to_s, url_for(file)
+
 .links
   -if @question.links.present?
     p Links:
@@ -21,10 +16,11 @@ p= question.body
           - else
             p
               = link_to link.name, link.url
+
 .question-errors
   = render 'shared/errors', resource: @question
 
--if user_signed_in? && current_user.author?(question)
+-if can?([:update, :destroy], @question)
   p= link_to 'Delete question', question_path(question), method: :delete,
           data: { confirm: 'Are you sure you want to delete the question?' }
   p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
@@ -42,6 +38,15 @@ p= question.body
   = f.text_area :body
   = f.label :files
   = f.file_field :files, multiple: true, direct_upload: true
+
+  #files
+    - @question.files.each do |file|
+      p id="file_#{file.id}"
+        = link_to file.filename.to_s, url_for(file)
+        = link_to ' X', attachment_path(file),
+                method: :delete,
+                data: { confirm: 'Are you sure?' },
+                remote: true
 
   #links-container
     = link_to_add_association 'Add link', f, :links

@@ -5,6 +5,9 @@ function showLoginAlert() {
 
   if (document.body) {
     document.body.appendChild(alertBox);
+    document.querySelectorAll('form textarea').forEach(input => {
+      input.value = '';
+    });
 
     setTimeout(() => {
       alertBox.remove();

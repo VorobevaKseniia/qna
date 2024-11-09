@@ -1,7 +1,7 @@
 div.container
   div.rating-question-row
     div.rating
-      - if user_signed_in?
+      - if can?(:vote, @question)
         = button_to vote_votes_path(value: 1, votable_id: @question.id, votable_type: @question.class.name),
                 remote: true,
                 method: :post,
@@ -34,10 +34,7 @@ div.container
       .comment-errors
       = form_with model: [@question, @comment], class: 'new-comment', data: { commentable_type: 'Question', commentable_id: @question.id }, local: false do |f|
         = f.text_area :body
-        - if user_signed_in?
-          = f.submit 'Comment'
-        - else
-          = f.submit 'Comment', onclick: 'showLoginAlert();'
+        = conditional_submit_button(f, 'Comment', :create)
 
   .vote-errors
   .remove-file
@@ -59,4 +56,4 @@ h1 = 'New answer'
     = f.fields_for :links do |l|
     = link_to_add_association 'Add link', f, :links
 
-  = f.submit 'Answer'
+  = conditional_submit_button(f, 'Answer', :create)

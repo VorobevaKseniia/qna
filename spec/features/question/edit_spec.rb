@@ -13,13 +13,11 @@ feature 'User can edit their question', %q{
     background do
       sign_in(user)
       visit question_path(question)
-      within '.question' do
-        click_on 'Edit'
-      end
     end
 
     scenario 'edits their question' do
       within '.question' do
+        click_on 'Edit'
         fill_in 'Title', with: 'edited title'
         fill_in 'Body', with: 'edited body'
         click_on 'Save'
@@ -35,6 +33,7 @@ feature 'User can edit their question', %q{
 
     scenario 'edits their question with errors' do
       within '.question' do
+        click_on 'Edit'
         fill_in 'Title', with: ''
         fill_in 'Body', with: ''
         click_on 'Save'

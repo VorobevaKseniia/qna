@@ -1,5 +1,5 @@
 class AnswerSerializer < ActiveModel::Serializer
-  attributes :id, :body,:question_id, :user_id, :attached_files, :created_at, :updated_at
+  attributes :id, :body, :question_id, :user_id, :attached_files, :created_at, :updated_at
 
   belongs_to :user
   belongs_to :question

@@ -24,6 +24,7 @@ class Ability
 
   def user_abilities
     guest_abilities
+    
     can :create, [Question, Answer, Comment, Link, Award, ActiveStorage::Attachment]
     can :update, [Question, Answer], user: user
     can :destroy, [Question, Answer], user: user

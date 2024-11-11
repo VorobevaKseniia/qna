@@ -1,10 +1,12 @@
 require 'rails_helper'
 
-describe 'Questins API', type: :request do
+describe 'Answers API', type: :request do
   let(:headers) { { 'ACCEPT' => 'application/json' } }
 
-  describe 'GET /api/v1/questions' do
-    let(:api_path) { '/api/v1/questions' }
+  describe 'GET /api/v1/questions/:id/answers' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers" }
 
     it_behaves_like 'API Authorizable' do
       let(:method) { :get }
@@ -12,10 +14,9 @@ describe 'Questins API', type: :request do
 
     context 'authorized' do
       let(:access_token) { create(:access_token) }
-      let(:user) { create(:user) }
-      let!(:questions) { create_list(:question, 3, user: user) }
-      let(:question) { questions.first }
-      let(:question_response) { json['questions'].first }
+      let!(:answers) { create_list(:answer, 3, question: question, user: user) }
+      let(:answer) { answers.first }
+      let(:answer_response) { json['answers'].first }
 
       before do
         get api_path, params: { access_token: access_token.token }, headers: headers
@@ -26,25 +27,26 @@ describe 'Questins API', type: :request do
       end
 
       it 'returns list of questions' do
-        expect(json['questions'].size).to eq 3
+        expect(json['answers'].size).to eq 3
       end
 
       it 'returns all public fields' do
-        %w[id title body created_at updated_at].each do |attr|
-          expect(question_response[attr]).to eq question.send(attr).as_json
+        %w[id body created_at updated_at].each do |attr|
+          expect(answer_response[attr]).to eq answer.send(attr).as_json
         end
       end
 
       it 'contains user object' do
-        expect(question_response['user']['id']).to eq question.user.id
+        expect(answer_response['user']['id']).to eq question.user.id
       end
     end
   end
 
-  describe 'GET /api/v1/questions/:id' do
+  describe 'GET /api/v1/answers/:id' do
     let(:user) { create(:user) }
     let(:question) { create(:question, user: user) }
-    let(:api_path) { "/api/v1/questions/#{question.id}" }
+    let(:answer) { create(:answer, question: question, user: user) }
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers/#{answer.id}" }
 
     it_behaves_like 'API Authorizable' do
       let(:method) { :get }
@@ -52,20 +54,20 @@ describe 'Questins API', type: :request do
 
     context 'authorized' do
       let(:access_token) { create(:access_token) }
-      let!(:comments) { create_list(:comment, 3, commentable: question, user: user) }
-      let!(:links) { create_list(:link, 3, linkable: question) }
+      let!(:comments) { create_list(:comment, 3, commentable: answer, user: user) }
+      let!(:links) { create_list(:link, 3, linkable: answer) }
       let!(:files) do
-        question.files.attach(
+        answer.files.attach(
           io: File.open(Rails.root.join('spec/rails_helper.rb')),
           filename: 'rails_helper.rb'
         )
-        question.files.attach(
+        answer.files.attach(
           io: File.open(Rails.root.join('spec/spec_helper.rb')),
           filename: 'spec_helper.rb'
         )
       end
 
-      let(:api_response) { json['question'] }
+      let(:api_response) { json['answer'] }
 
       before do
         get api_path, params: { access_token: access_token.token }, headers: headers
@@ -75,16 +77,16 @@ describe 'Questins API', type: :request do
         expect(response).to be_successful
       end
 
-      it 'returns all public fields for question' do
-        %w[id title body user_id created_at updated_at].each do |attr|
-          expect(api_response[attr]).to eq question.send(attr).as_json
+      it 'returns all public fields for answer' do
+        %w[id body question_id user_id created_at updated_at].each do |attr|
+          expect(api_response[attr]).to eq answer.send(attr).as_json
         end
       end
 
       it 'contains associated comments, links, and files' do
         expect(api_response['comments'].size).to eq 3
         expect(api_response['links'].size).to eq 3
-        expect(api_response['attached_files'].size).to eq question.files.size
+        expect(api_response['attached_files'].size).to eq answer.files.size
       end
     end
   end

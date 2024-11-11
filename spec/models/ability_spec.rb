@@ -44,6 +44,14 @@ RSpec.describe Ability, type: :model do
     it { should be_able_to :destroy, create(:answer, user: user, question: question), user: user }
     it { should_not be_able_to :destroy, create(:answer, user: other, question: question), user: user }
 
+    it { should be_able_to :destroy, create(:link, linkable: question), user: user }
+
+    it 'allows the user to destroy their own attachments' do
+      question.files.attach(io: File.open(Rails.root.join('spec/rails_helper.rb')), filename: 'rails_helper.rb')
+      attachment = question.files.first
+      expect(ability).to be_able_to(:destroy, attachment)
+    end
+
     context 'when user is the author of the question' do
       it { should be_able_to :mark_as_best, answer, user: user }
     end

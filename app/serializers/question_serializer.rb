@@ -5,11 +5,5 @@ class QuestionSerializer < ActiveModel::Serializer
   has_many :comments
   has_many :links
 
-  attribute :attached_files
-
-  def attached_files
-    object.files.map do |file|
-      AttachedFileSerializer.new(file).as_json
-    end
-  end
+  include Attachable
 end

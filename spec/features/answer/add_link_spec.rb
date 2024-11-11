@@ -34,14 +34,14 @@ feature 'User can add links to answer', %q{
 
       click_on 'Answer'
     end
-    within '.answers .links' do
+    within "#answer-#{answer.id} .links" do
       expect(page).to have_link('Shoulda', href: shoulda)
       expect(page).to have_link('Google', href: google)
     end
   end
 
   scenario 'User adds links when editing a answer', js: true do
-    within '.answers' do
+    within "#answer-#{answer.id}" do
       click_on 'Edit'
       click_on 'Add link'
 

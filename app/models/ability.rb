@@ -24,9 +24,11 @@ class Ability
 
   def user_abilities
     guest_abilities
-    can :create, [Question, Answer, Comment]
+    can :create, [Question, Answer, Comment, Link, Award, ActiveStorage::Attachment]
     can :update, [Question, Answer], user: user
     can :destroy, [Question, Answer], user: user
+    can :destroy, ActiveStorage::Attachment, record: { user_id: user.id }
+    can :destroy, Link, linkable: { user_id: user.id }
 
     can :mark_as_best, Answer do |answer|
       user.author?(answer.question)

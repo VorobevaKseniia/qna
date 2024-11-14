@@ -1,4 +1,4 @@
-h1 New answer to your question
-p Your question "#{@question.title}" has a new answer:
+h1 New answer to the question
+p This question "#{@question.title}" has a new answer:
 p= @answer.body
 p= link_to 'View Answer', question_url(@question)

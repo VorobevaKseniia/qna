@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   resources :users do
     resources :questions, concerns: [:commentable], shallow: true do
+      resources :subscriptions, only: %i[create destroy]
       resources :answers, concerns: [:commentable], shallow: true do
         member do
           patch :mark_as_best

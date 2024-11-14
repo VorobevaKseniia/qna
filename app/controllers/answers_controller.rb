@@ -18,7 +18,7 @@ class AnswersController < ApplicationController
 
     if @answer.save
       head :created
-      DailyDigestMailer.with(user: @question.user, answer: @answer).new_answer.deliver_later
+      Services::NewAnswerNotification.new(@answer).send_notifications
     else
       render json: @answer.errors.full_messages, status: :unprocessable_entity
     end

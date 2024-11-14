@@ -14,6 +14,7 @@ import "../links"
 import "../votes"
 import "../alerts"
 import "../comments"
+import "../subscription"
 
 var jQuery = require("jquery");
 // import jQuery from "jquery";

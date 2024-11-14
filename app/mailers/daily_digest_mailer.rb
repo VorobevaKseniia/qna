@@ -11,9 +11,10 @@ class DailyDigestMailer < ApplicationMailer
     mail to: user.email, subject: 'New questions for today'
   end
 
-  def new_answer(user, answer)
-    @answer = answer
-    @question = answer.question
-    mail to: user.email, subject: 'New answer to your question'
+  def new_answer
+    @user = params[:user]
+    @answer = params[:answer]
+    @question = @answer.question
+    mail to: @user.email, subject: 'New answer to your question'
   end
 end

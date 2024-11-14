@@ -24,6 +24,17 @@ div.container
           | &#9660;
           span #{@question.dislikes}
     div.question
+      .subscription
+        .notification-info
+        - if can?(:create, Subscription)
+          - if current_user.subscribed_questions.include?(@question)
+            = button_tag 'Unsubscribe', id: 'subscription-button',
+                    data: { subscribed: true, question_id: @question.id,
+                            subscription_id: current_user.subscriptions.find_by(question: @question).id,
+                            confirm: 'Are you sure?' }
+          - else
+            = button_tag 'Subscribe', id: 'subscription-button',
+                    data: { subscribed: false, question_id: @question.id }
       = render @question
 
       .comments

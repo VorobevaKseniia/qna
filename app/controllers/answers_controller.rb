@@ -5,6 +5,7 @@ class AnswersController < ApplicationController
   before_action :find_question, only: %i[new create]
   before_action :find_answer, only: %i[mark_as_best show edit update destroy remove_file]
   before_action :set_comment, only: %i[edit update mark_as_best]
+  after_action :send_notifications, only: :create
 
   after_action :publish_answer, only: [:create]
   authorize_resource
@@ -18,7 +19,6 @@ class AnswersController < ApplicationController
 
     if @answer.save
       head :created
-      Services::NewAnswerNotification.new(@answer).send_notifications
     else
       render json: @answer.errors.full_messages, status: :unprocessable_entity
     end
@@ -67,5 +67,9 @@ class AnswersController < ApplicationController
     return if @answer.errors.any?
 
     ActionCable.server.broadcast("questions/#{@answer.question_id}", @answer)
+  end
+
+  def send_notifications
+    Services::NewAnswerNotification.new(@answer).send_notifications
   end
 end

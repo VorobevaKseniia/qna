@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  include PgSearch::Model
+  pg_search_scope :search_by, against: [:email], using: { tsearch: { prefix: true } }
+
   include Votable
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

@@ -6,6 +6,8 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  resources :searches, only: [:index], constraints: { scope: /all|questions|answers|comments|users/ }
+
   use_doorkeeper
   root to: 'questions#index'
 

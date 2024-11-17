@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Question < ApplicationRecord
+  include PgSearch::Model
+  pg_search_scope :search_by, against: [:title, :body], using: { tsearch: { prefix: true } }
+
   include Linkable
   include Votable
   include Commentable

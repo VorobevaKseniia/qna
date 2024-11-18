@@ -259,6 +259,9 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.8)
+    pg_search (2.3.7)
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
     popper_js (2.11.8)
     public_suffix (6.0.1)
     puma (5.6.9)
@@ -484,6 +487,7 @@ DEPENDENCIES
   omniauth-github
   omniauth-rails_csrf_protection
   pg (~> 1.1)
+  pg_search
   puma (~> 5.0)
   rack-mini-profiler (~> 2.0)
   rails (~> 6.1.7, >= 6.1.7.8)
@@ -509,4 +513,4 @@ RUBY VERSION
    ruby 3.1.3p185
 
 BUNDLED WITH
-   2.5.6
+   2.5.23

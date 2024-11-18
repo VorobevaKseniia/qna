@@ -1,0 +1,4 @@
+- if item.commentable.is_a?(Question)
+  h3 = link_to item.body, question_path(item.commentable)
+- else
+  h3 = link_to item.body, question_path(item.commentable.question)

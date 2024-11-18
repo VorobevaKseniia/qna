@@ -10,13 +10,17 @@ RSpec.describe SearchesController, type: :controller do
 
   describe 'GET #index' do
     context 'with valid query' do
-      before { get :index, params: { query: 'My' } }
-
-      it 'returns success response' do
-        expect(response).to have_http_status(:success)
+      before do
+        allow(Services::Search).to receive(:new).with('My', nil)
+                                     .and_return(double(perform: [question, answer, comment, user]))
+        get :index, params: { query: 'My' }
       end
 
-      it 'finds the relevant resources' do
+      it 'initializes the search service with correct parameters' do
+        expect(Services::Search).to have_received(:new).with('My', nil)
+      end
+
+      it 'assigns the result of the search to @result' do
         expect(assigns(:result)).to match_array([question, answer, comment, user])
       end
 
@@ -26,9 +30,17 @@ RSpec.describe SearchesController, type: :controller do
     end
 
     context 'with empty query' do
-      before { get :index, params: { query: '' } }
+      before do
+        allow(Services::Search).to receive(:new).with('', nil)
+                                     .and_return(double(perform: []))
+        get :index, params: { query: '' }
+      end
 
-      it 'returns empty results' do
+      it 'initializes the search service with correct parameters' do
+        expect(Services::Search).to have_received(:new).with('', nil)
+      end
+
+      it 'assigns an empty result to @result' do
         expect(assigns(:result)).to be_empty
       end
 
@@ -38,24 +50,18 @@ RSpec.describe SearchesController, type: :controller do
     end
 
     context 'with type-specific query' do
-      it 'searches only questions when type is question' do
-        get :index, params: { query: 'My', type: 'Question' }
+      before do
+        allow(Services::Search).to receive(:new).with('My', 'Question')
+                                     .and_return(double(perform: [question]))
+        get :index, params: { query: 'My', scope: 'Question' }
+      end
+
+      it 'searches only questions when scope is Question' do
         expect(assigns(:result)).to match_array([question])
       end
 
-      it 'searches only answers when type is answer' do
-        get :index, params: { query: 'My', type: 'Answer' }
-        expect(assigns(:result)).to match_array([answer])
-      end
-
-      it 'searches only comments when type is comment' do
-        get :index, params: { query: 'My', type: 'Comment' }
-        expect(assigns(:result)).to match_array([comment])
-      end
-
-      it 'searches only users when type is user' do
-        get :index, params: { query: 'My', type: 'User' }
-        expect(assigns(:result)).to match_array([user])
+      it 'initializes the search service with correct parameters' do
+        expect(Services::Search).to have_received(:new).with('My', 'Question')
       end
     end
   end

@@ -277,8 +277,8 @@ Devise.setup do |config|
                   scope: 'user:email, read:user'
 
   config.omniauth :facebook,
-                  Rails.application.credentials[Rails.env.to_sym][:facebook][:app_id],
-                  Rails.application.credentials[Rails.env.to_sym][:facebook][:app_secret],
+                  Rails.application.credentials.dig(Rails.env.to_sym, :facebook, :app_id),
+                  Rails.application.credentials.dig(Rails.env.to_sym, :facebook, :app_secret),
                   scope: 'public_profile, email'
 
 

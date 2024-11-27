@@ -38,16 +38,7 @@ yarn-debug.log*
 .idea
 /config/database.yml
 
-/public/packs
-/public/packs-test
-#/node_modules
-/yarn-error.log
-yarn-debug.log*
-.yarn-integrity
-
 /config/credentials/development.key
-
-/config/master.key
 
 /config/credentials/test.key
 

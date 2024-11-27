@@ -22,10 +22,10 @@ module Qna
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.action_cable.disable_request_forgery_protection = false
-    require_dependency Rails.root.join('app/services/find_for_oauth.rb')
-    require_dependency Rails.root.join('app/services/daily_digest.rb')
-    require_dependency Rails.root.join('app/services/new_answer_notification.rb')
-    require_dependency Rails.root.join('app/services/search.rb')
+    # require_dependency Rails.root.join('app/services/find_for_oauth.rb')
+    # require_dependency Rails.root.join('app/services/daily_digest.rb')
+    # require_dependency Rails.root.join('app/services/new_answer_notification.rb')
+    # require_dependency Rails.root.join('app/services/search.rb')
 
     config.active_job.queue_adapter = :sidekiq
 

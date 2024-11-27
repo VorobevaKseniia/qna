@@ -17,5 +17,8 @@
     "webpack": "4",
     "webpack-cli": "3",
     "webpack-dev-server": "^3"
+  },
+  "scripts": {
+    "webpack": "webpack --config config/webpack/production.js"
   }
 }

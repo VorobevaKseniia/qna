@@ -93,3 +93,6 @@ gem "aws-sdk-s3", require: false
 gem "cocoon"
 gem 'gon'
 gem 'skim'
+
+gem 'jwt', '~> 2.2.0'
+gem 'rack-protection', '~> 2.0.8'

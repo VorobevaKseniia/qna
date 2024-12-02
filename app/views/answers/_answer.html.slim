@@ -27,14 +27,14 @@ div id="answer-#{answer.id}" class="answer"
       h2= answer.body
       p= "Best answer" if answer.best
 
-  - if can?([:update, :destroy], answer)
+  - if can?(:destroy, answer)
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     |  |
     = link_to 'Delete answer', answer_path(answer), method: :delete,
             data: { confirm: 'Are you sure?' }, remote: true
 
-    - if can?(:mark_as_best, answer)
-      p= link_to 'Mark as best', mark_as_best_answer_path(answer), method: :patch, remote: true
+  - if can?(:mark_as_best, answer)
+    p= link_to 'Mark as best', mark_as_best_answer_path(answer), method: :patch, remote: true
 
   .files
     - if answer.files.attached?

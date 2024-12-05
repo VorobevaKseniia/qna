@@ -9,7 +9,8 @@ set :deploy_to, '/home/deployer/qna3'
 set :deploy_user, 'deployer'
 
 # Default value for :linked_files is []
-append :linked_files, 'config/database.yml', 'config/credentials/production.key', 'config/credentials/production.yml.enc'
+append :linked_files, 'config/database.yml', 'config/credentials/production.key',
+       'config/credentials/production.yml.enc', 'config/sidekiq.yml'
 
 # Default value for linked_dirs is []
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system', 'storage'
@@ -17,6 +18,16 @@ append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/syst
 
 # Default value for default_env is {}
 set :default_env, { PATH: "$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH:node_modules/.bin" }
+
+set :unicorn_config_path, -> { "#{current_path}/config/unicorn/production.rb" }
+set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
+
+# Sidekiq Configuration
+set :sidekiq_roles, :app
+set :sidekiq_config, "#{current_path}/config/sidekiq.yml"
+set :sidekiq_pid, "#{shared_path}/tmp/pids/sidekiq.pid"
+set :sidekiq_log, "#{shared_path}/log/sidekiq.log"
+set :sidekiq_env, fetch(:rails_env)
 
 # Default value for local_user is ENV['USER']
 # set :local_user, -> { `git config user.name`.chomp }

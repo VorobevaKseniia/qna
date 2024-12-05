@@ -9,6 +9,7 @@ require "capistrano/rails"
 # require "capistrano/passenger"
 require 'capistrano/yarn'
 require 'capistrano3/unicorn'
+require 'capistrano/sidekiq'
 
 # Load the SCM plugin appropriate to your project:
 #

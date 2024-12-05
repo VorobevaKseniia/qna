@@ -76,6 +76,7 @@ group :development do
   gem 'capistrano-passenger', require: false
   gem 'capistrano-yarn'
   gem 'capistrano3-unicorn', require: false
+  gem 'capistrano-sidekiq'
 end
 
 group :test do

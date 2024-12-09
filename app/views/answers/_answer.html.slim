@@ -1,86 +1,87 @@
-div id="answer-#{answer.id}" class="answer"
-  div.rating-answer-row
-    div.rating
-      - if can?(:vote, answer)
-        = button_to vote_votes_path(value: 1, votable_id: answer.id, votable_type: answer.class.name),
-                remote: true,
-                method: :post,
-                data: { votable_id: answer.id, value: 1 } do
-          | &#9650;
-          span id="likes-#{answer.id}" #{answer.likes}
-        span id="rating-#{answer.id}" #{answer.rating}
-        = button_to vote_votes_path(value: -1, votable_id: answer.id, votable_type: answer.class.name),
-                remote: true,
-                method: :post,
-                data: { votable_id: answer.id, value: -1 } do
-          | &#9660;
-          span id="dislikes-#{answer.id}" #{answer.dislikes}
-      -else
-        button.vote-button onclick="showLoginAlert()"
-          | &#9650;
-          span #{answer.likes}
-        span #{answer.rating}
-        button.vote-button onclick="showLoginAlert()"
-          | &#9660;
-          span #{answer.dislikes}
-    div.answer
-      h2= answer.body
-      p= "Best answer" if answer.best
+- cache answer do
+  div id="answer-#{answer.id}" class="answer"
+    div.rating-answer-row
+      div.rating
+        - if can?(:vote, answer)
+          = button_to vote_votes_path(value: 1, votable_id: answer.id, votable_type: answer.class.name),
+                  remote: true,
+                  method: :post,
+                  data: { votable_id: answer.id, value: 1 } do
+            | &#9650;
+            span id="likes-#{answer.id}" #{answer.likes}
+          span id="rating-#{answer.id}" #{answer.rating}
+          = button_to vote_votes_path(value: -1, votable_id: answer.id, votable_type: answer.class.name),
+                  remote: true,
+                  method: :post,
+                  data: { votable_id: answer.id, value: -1 } do
+            | &#9660;
+            span id="dislikes-#{answer.id}" #{answer.dislikes}
+        -else
+          button.vote-button onclick="showLoginAlert()"
+            | &#9650;
+            span #{answer.likes}
+          span #{answer.rating}
+          button.vote-button onclick="showLoginAlert()"
+            | &#9660;
+            span #{answer.dislikes}
+      div.answer
+        h2= answer.body
+        p= "Best answer" if answer.best
 
-  - if can?(:destroy, answer)
-    = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-    |  |
-    = link_to 'Delete answer', answer_path(answer), method: :delete,
-            data: { confirm: 'Are you sure?' }, remote: true
+    - if can?(:destroy, answer)
+      = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      |  |
+      = link_to 'Delete answer', answer_path(answer), method: :delete,
+              data: { confirm: 'Are you sure?' }, remote: true
 
-  - if can?(:mark_as_best, answer)
-    p= link_to 'Mark as best', mark_as_best_answer_path(answer), method: :patch, remote: true
+    - if can?(:mark_as_best, answer)
+      p= link_to 'Mark as best', mark_as_best_answer_path(answer), method: :patch, remote: true
 
-  .files
-    - if answer.files.attached?
-      - answer.files.each do |file|
-        = link_to file.filename.to_s, url_for(file)
-
-  .links
-    -if answer.links.present?
-      p Links:
-      ul
-        - answer.links.each do |link|
-          li= link_to link.name, link.url
-
-  = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
-    = f.label :body
-    = f.text_area :body
-    = f.label :files
-    = f.file_field :files, multiple: true, direct_upload: true
-
-    #files
-      - answer.files.each do |file|
-        p id="file_#{file.id}"
+    .files
+      - if answer.files.attached?
+        - answer.files.each do |file|
           = link_to file.filename.to_s, url_for(file)
-          = link_to ' X', attachment_path(file),
-                    method: :delete,
-                    data: { confirm: 'Are you sure?' },
-                    remote: true
 
-    #links-container
-      = link_to_add_association 'Add link', f, :links
+    .links
+      -if answer.links.present?
+        p Links:
+        ul
+          - answer.links.each do |link|
+            li= link_to link.name, link.url
 
-    #links
-      .answer-links
-        - answer.links.each do |link|
-          div id="link-#{link.id}"
-            p
-              = link.name
-              = (link_to " X", link_path(link), method: :delete, remote: true)
-    = f.submit 'Save'
+    = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
+      = f.label :body
+      = f.text_area :body
+      = f.label :files
+      = f.file_field :files, multiple: true, direct_upload: true
 
-  .comments
-    - if answer.comments.present?
-      - answer.comments.each do |comment|
-        p= comment.body
+      #files
+        - answer.files.each do |file|
+          p id="file_#{file.id}"
+            = link_to file.filename.to_s, url_for(file)
+            = link_to ' X', attachment_path(file),
+                      method: :delete,
+                      data: { confirm: 'Are you sure?' },
+                      remote: true
 
-  .comment-errors
-  = form_with model: [answer, @comment], class: 'new-comment', data: { commentable_type: 'Answer', commentable_id: answer.id }, local: false do |f|
-    = f.text_area :body
-    = conditional_submit_button(f, 'Comment', :create)
+      #links-container
+        = link_to_add_association 'Add link', f, :links
+
+      #links
+        .answer-links
+          - answer.links.each do |link|
+            div id="link-#{link.id}"
+              p
+                = link.name
+                = (link_to " X", link_path(link), method: :delete, remote: true)
+      = f.submit 'Save'
+
+    .comments
+      - if answer.comments.present?
+        - answer.comments.each do |comment|
+          = render comment
+
+    .comment-errors
+    = form_with model: [answer, @comment], class: 'new-comment', data: { commentable_type: 'Answer', commentable_id: answer.id }, local: false do |f|
+      = f.text_area :body
+      = conditional_submit_button(f, 'Comment', :create)

@@ -1,70 +1,71 @@
-div.container
-  div.rating-question-row
-    div.rating
-      - if can?(:vote, @question)
-        = button_to vote_votes_path(value: 1, votable_id: @question.id, votable_type: @question.class.name),
-                remote: true,
-                method: :post,
-                data: { votable_id: @question.id, value: 1 } do
-          | &#9650;
-          span id="likes-#{@question.id}" #{@question.likes}
-        span id="rating-#{@question.id}" #{@question.rating}
-        = button_to vote_votes_path(value: -1, votable_id: @question.id, votable_type: @question.class.name),
-                remote: true,
-                method: :post,
-                data: { votable_id: @question.id, value: -1 } do
-          | &#9660;
-          span id="dislikes-#{@question.id}" #{@question.dislikes}
-      - else
-        button.vote-button onclick="showLoginAlert()"
-          | &#9650;
-          span #{@question.likes}
-        span #{@question.rating}
-        button.vote-button onclick="showLoginAlert()"
-          | &#9660;
-          span #{@question.dislikes}
-    div.question
-      .subscription
-        .notification-info
-        - if can?(:create, Subscription)
-          - if current_user.subscribed_questions.include?(@question)
-            = button_tag 'Unsubscribe', id: 'subscription-button',
-                    data: { subscribed: true, question_id: @question.id,
-                            subscription_id: current_user.subscriptions.find_by(question: @question).id,
-                            confirm: 'Are you sure?' }
-          - else
-            = button_tag 'Subscribe', id: 'subscription-button',
-                    data: { subscribed: false, question_id: @question.id }
-      = render @question
+- cache @question do
+  div.container
+    div.rating-question-row
+      div.rating
+        - if can?(:vote, @question)
+          = button_to vote_votes_path(value: 1, votable_id: @question.id, votable_type: @question.class.name),
+                  remote: true,
+                  method: :post,
+                  data: { votable_id: @question.id, value: 1 } do
+            | &#9650;
+            span id="likes-#{@question.id}" #{@question.likes}
+          span id="rating-#{@question.id}" #{@question.rating}
+          = button_to vote_votes_path(value: -1, votable_id: @question.id, votable_type: @question.class.name),
+                  remote: true,
+                  method: :post,
+                  data: { votable_id: @question.id, value: -1 } do
+            | &#9660;
+            span id="dislikes-#{@question.id}" #{@question.dislikes}
+        - else
+          button.vote-button onclick="showLoginAlert()"
+            | &#9650;
+            span #{@question.likes}
+          span #{@question.rating}
+          button.vote-button onclick="showLoginAlert()"
+            | &#9660;
+            span #{@question.dislikes}
+      div.question
+        .subscription
+          .notification-info
+          - if can?(:create, Subscription)
+            - if current_user.subscribed_questions.include?(@question)
+              = button_tag 'Unsubscribe', id: 'subscription-button',
+                      data: { subscribed: true, question_id: @question.id,
+                              subscription_id: current_user.subscriptions.find_by(question: @question).id,
+                              confirm: 'Are you sure?' }
+            - else
+              = button_tag 'Subscribe', id: 'subscription-button',
+                      data: { subscribed: false, question_id: @question.id }
+        = render @question
 
-      .comments
-        - if @question.comments.present?
-          - @question.comments.each do |comment|
-            p= comment.body
+        .comments
+          - if @question.comments.present?
+            - @question.comments.each do |comment|
+              = render comment
 
-      .comment-errors
-      = form_with model: [@question, @comment], class: 'new-comment', data: { commentable_type: 'Question', commentable_id: @question.id }, local: false do |f|
-        = f.text_area :body
-        = conditional_submit_button(f, 'Comment', :create)
+        .comment-errors
+        = form_with model: [@question, @comment], class: 'new-comment', data: { commentable_type: 'Question', commentable_id: @question.id }, local: false do |f|
+          = f.text_area :body
+          = conditional_submit_button(f, 'Comment', :create)
 
-  .vote-errors
-  .remove-file
-  .answers
-    = render @answers
-    .disposal-information
+    .vote-errors
+    .remove-file
+    .answers
+      = render @answers
+      .disposal-information
 
-h1 = 'New answer'
-.answer-errors
-= form_with model: [@question, @answer], class: 'new-answer', local: false do |f|
-  = f.label :body
-  = f.text_area :body
+  h1 = 'New answer'
+  .answer-errors
+  = form_with model: [@question, @answer], class: 'new-answer', local: false do |f|
+    = f.label :body
+    = f.text_area :body
 
-  = f.label :files
-  = f.file_field :files, multiple: true, direct_upload: true
+    = f.label :files
+    = f.file_field :files, multiple: true, direct_upload: true
 
-  p Links:
-  #links-container
-    = f.fields_for :links do |l|
-    = link_to_add_association 'Add link', f, :links
+    p Links:
+    #links-container
+      = f.fields_for :links do |l|
+      = link_to_add_association 'Add link', f, :links
 
-  = conditional_submit_button(f, 'Answer', :create)
+    = conditional_submit_button(f, 'Answer', :create)

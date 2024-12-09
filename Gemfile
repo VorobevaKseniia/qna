@@ -49,6 +49,7 @@ gem 'mysql2'
 gem 'thinking-sphinx'
 gem 'mini_racer'
 gem 'redis', '~> 4.0'
+gem 'redis-rails'
 gem 'unicorn'
 
 group :development, :test do
